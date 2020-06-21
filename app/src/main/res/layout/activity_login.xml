@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/Login_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Login">
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/textInputLayout3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.502"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.35"
+
+
+        >
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:layout_width="300dp"
+            android:layout_height="44dp"
+            android:id="@+id/login_et_emailInput"
+            android:hint="Email"
+            android:inputType="textEmailAddress"
+            android:singleLine="true"
+            />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/textInputLayout4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textInputLayout3">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:layout_width="300dp"
+            android:layout_height="44dp"
+            android:hint="Password"
+            android:id="@+id/login_et_passwordInput"
+            android:inputType="textPassword"
+            android:singleLine="true"
+            />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <CheckBox
+        android:id="@+id/login_cb_AutoLogin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="자동 로그인"
+        android:textSize="10sp"
+        app:layout_constraintEnd_toStartOf="@+id/login_tv_findID"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textInputLayout4" />
+
+    <TextView
+        android:id="@+id/login_tv_findID"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/login_bt_loginButton"
+        android:layout_marginEnd="12dp"
+        android:layout_marginRight="12dp"
+        android:text="아이디 찾기"
+        app:layout_constraintBaseline_toBaselineOf="@+id/login_cb_AutoLogin"
+        app:layout_constraintEnd_toStartOf="@+id/login_tv_findPassword" />
+
+    <TextView
+        android:id="@+id/login_tv_findPassword"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/login_bt_loginButton"
+        android:layout_toRightOf="@id/login_tv_findID"
+        android:text="비밀번호 찾기"
+        app:layout_constraintBaseline_toBaselineOf="@+id/login_tv_findID"
+        app:layout_constraintEnd_toEndOf="@+id/textInputLayout4" />
+
+    <Button
+        android:id="@+id/login_bt_loginButton"
+        android:layout_width="180dp"
+        android:layout_height="50dp"
+        android:layout_marginBottom="264dp"
+        android:layout_toLeftOf="@+id/login_bt_signupButton"
+        android:background="#1E8037"
+        android:text="로그인"
+        android:textColor="#FFFFFF"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/login_tv_findID"
+        app:layout_constraintVertical_bias="0.738" />
+
+    <Button
+        android:id="@+id/login_bt_signupButton"
+        android:layout_width="180dp"
+        android:layout_height="50dp"
+        android:layout_alignTop="@+id/login_bt_loginButton"
+        android:background="#FFFFFF"
+        android:text="회원가입"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.502"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/login_bt_loginButton"
+        app:layout_constraintVertical_bias="0.07" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/signup_Layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".SettingColor">
+
+    <TextView
+        android:id="@+id/textView10"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:text="ColorSetting"
+        android:textSize="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <View
+        android:id="@+id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="10dp"
+        android:layout_marginTop="5dp"
+        android:background="#E6E6E6"
+        app:layout_constraintTop_toBottomOf="@+id/textView10"
+        tools:layout_editor_absoluteX="0dp" />
+
+    <Button
+        android:id="@+id/pink"
+        android:layout_width="39dp"
+        android:layout_height="29dp"
+        android:layout_marginTop="116dp"
+        android:background="@color/colorpink"
+        android:text=""
+        app:layout_constraintStart_toEndOf="@+id/divider4"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/orange"
+        android:layout_width="39dp"
+        android:layout_height="29dp"
+        android:layout_marginTop="20dp"
+        android:background="@color/colororange"
+        android:text=""
+        app:layout_constraintStart_toEndOf="@+id/divider4"
+        app:layout_constraintTop_toBottomOf="@+id/pink" />
+
+    <Button
+        android:id="@+id/green"
+        android:layout_width="39dp"
+        android:layout_height="29dp"
+        android:layout_marginTop="20dp"
+        android:background="@color/colorgreen"
+        android:text=""
+        app:layout_constraintStart_toEndOf="@+id/divider4"
+        app:layout_constraintTop_toBottomOf="@+id/orange" />
+
+    <Button
+        android:id="@+id/blue"
+        android:layout_width="39dp"
+        android:layout_height="29dp"
+        android:layout_marginTop="20dp"
+        android:background="@color/colorblue"
+        android:text=""
+        app:layout_constraintStart_toEndOf="@+id/divider4"
+        app:layout_constraintTop_toBottomOf="@+id/green" />
+
+    <Button
+        android:id="@+id/purple"
+        android:layout_width="39dp"
+        android:layout_height="29dp"
+        android:layout_marginTop="20dp"
+        android:background="@color/colorpurple"
+        android:text=""
+        app:layout_constraintStart_toEndOf="@+id/divider4"
+        app:layout_constraintTop_toBottomOf="@+id/blue" />
+
+    <EditText
+        android:id="@+id/text_pink"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="6"
+        android:imeOptions="actionDone"
+        android:maxLength="12"
+        android:paddingLeft="10dp"
+        android:singleLine="true"
+        android:text="공부"
+        android:textSize="20dp"
+        app:layout_constraintBottom_toBottomOf="@+id/pink"
+        app:layout_constraintStart_toEndOf="@+id/divider5"
+        app:layout_constraintTop_toTopOf="@+id/pink" />
+
+    <EditText
+        android:id="@+id/text_orange"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="6"
+        android:imeOptions="actionDone"
+        android:maxLength="12"
+        android:paddingLeft="10dp"
+        android:singleLine="true"
+        android:text="수업"
+        android:textSize="20dp"
+        app:layout_constraintBottom_toBottomOf="@+id/orange"
+        app:layout_constraintStart_toEndOf="@+id/divider5"
+        app:layout_constraintTop_toTopOf="@+id/orange" />
+
+    <EditText
+        android:id="@+id/text_green"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="6"
+        android:imeOptions="actionDone"
+        android:maxLength="12"
+        android:paddingLeft="10dp"
+        android:singleLine="true"
+        android:text="개인업무"
+        android:textSize="20dp"
+        app:layout_constraintBottom_toBottomOf="@+id/green"
+        app:layout_constraintStart_toEndOf="@+id/divider5"
+        app:layout_constraintTop_toTopOf="@+id/green" />
+
+    <EditText
+        android:id="@+id/text_blue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="6"
+        android:imeOptions="actionDone"
+        android:maxLength="12"
+        android:paddingLeft="10dp"
+        android:singleLine="true"
+        android:text="자기계발"
+        android:textSize="20dp"
+        app:layout_constraintBottom_toBottomOf="@+id/blue"
+        app:layout_constraintStart_toEndOf="@+id/divider5"
+        app:layout_constraintTop_toTopOf="@+id/blue" />
+
+    <EditText
+        android:id="@+id/text_purple"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="6"
+        android:imeOptions="actionDone"
+        android:maxLength="12"
+        android:paddingLeft="10dp"
+        android:singleLine="true"
+        android:text="네트워킹"
+        android:textSize="20dp"
+        app:layout_constraintBottom_toBottomOf="@+id/purple"
+        app:layout_constraintStart_toEndOf="@+id/divider5"
+        app:layout_constraintTop_toTopOf="@+id/purple" />
+
+    <Button
+        android:id="@+id/color_bt_correct"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@color/colorgreen"
+        android:text="수정하기"
+        android:textColor="#FFFFFF"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.573" />
+
+    <View
+        android:id="@+id/divider4"
+        android:layout_width="1dp"
+        android:layout_height="729dp"
+        android:layout_marginStart="64dp"
+        android:layout_marginLeft="64dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <View
+        android:id="@+id/divider5"
+        android:layout_width="1dp"
+        android:layout_height="729dp"
+        android:layout_marginStart="132dp"
+        android:layout_marginLeft="132dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

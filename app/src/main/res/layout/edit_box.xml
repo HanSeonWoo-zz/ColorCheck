@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="10dp">
+
+    <TextView
+        android:id="@+id/tv_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="날짜"
+        android:textSize="15dp"
+        app:layout_constraintBottom_toBottomOf="@+id/edit_date"
+        app:layout_constraintEnd_toStartOf="@+id/edit_date"
+        app:layout_constraintTop_toTopOf="@+id/edit_date" />
+
+    <EditText
+        android:id="@+id/edit_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:layout_marginTop="192dp"
+        android:inputType="date"
+        android:ems="10"
+        android:padding="10dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tv_StartTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="시작 시간"
+        android:textSize="15dp"
+        app:layout_constraintBottom_toBottomOf="@+id/edit_StartTime"
+        app:layout_constraintEnd_toStartOf="@+id/edit_StartTime"
+        app:layout_constraintTop_toTopOf="@+id/edit_StartTime" />
+
+    <EditText
+        android:id="@+id/edit_StartTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:ems="10"
+        android:inputType="time"
+        android:padding="10dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/edit_date" />
+
+    <TextView
+        android:id="@+id/tv_EndTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:text="종료 시간"
+        android:textSize="15dp"
+        app:layout_constraintBottom_toBottomOf="@+id/edit_EndTime"
+        app:layout_constraintEnd_toStartOf="@+id/edit_EndTime"
+        app:layout_constraintTop_toTopOf="@+id/edit_EndTime" />
+
+    <EditText
+        android:id="@+id/edit_EndTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:ems="10"
+        android:inputType="time"
+        android:padding="10dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/edit_StartTime" />
+
+    <TextView
+        android:id="@+id/tv_color"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="컬러"
+        android:textSize="15dp"
+        app:layout_constraintBottom_toBottomOf="@+id/edit_color"
+        app:layout_constraintEnd_toStartOf="@+id/edit_color"
+        app:layout_constraintTop_toTopOf="@+id/edit_color" />
+
+    <EditText
+        android:id="@+id/edit_color"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:ems="10"
+        android:inputType="number"
+        android:padding="10dp"
+        app:layout_constraintBottom_toTopOf="@id/button_dialog_submit"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/edit_EndTime" />
+
+
+    <Button
+        android:id="@+id/button_dialog_submit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="70dp"
+        android:background="@color/colorgreen"
+        android:text="수정"
+        android:textColor="#FFFFFF"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/edit_color" />
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:weightSum="10"
+        app:layout_constraintBottom_toTopOf="@+id/button_dialog_submit"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/edit_color">
+
+        <TextView
+            android:id="@+id/tv1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:gravity="right"
+            android:text="1 :" />
+
+        <Button
+            android:id="@+id/box_pink"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:background="@color/colorpink" />
+
+        <TextView
+            android:id="@+id/tv2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:gravity="right"
+            android:text="2 :" />
+
+        <Button
+            android:id="@+id/box_orange"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:background="@color/colororange" />
+
+        <TextView
+            android:id="@+id/tv3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:gravity="right"
+            android:text="3 :" />
+
+        <Button
+            android:id="@+id/box_green"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:background="@color/colorgreen" />
+
+        <TextView
+            android:id="@+id/tv4"
+            android:layout_width="wrap_content"
+
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:gravity="right"
+            android:text="4 :" />
+
+        <Button
+            android:id="@+id/box_blue"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:background="@color/colorblue" />
+
+        <TextView
+            android:id="@+id/tv5"
+            android:layout_width="wrap_content"
+
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:gravity="right"
+            android:text="5 :" />
+
+        <Button
+            android:id="@+id/box_purple"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:background="@color/colorpurple" />
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+

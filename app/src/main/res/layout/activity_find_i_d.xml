@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".FindID">
+
+
+    <TextView
+        android:id="@+id/findID_Title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="아이디 찾기"
+        android:textSize="25sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.12"/>
+
+    <EditText
+        android:id="@+id/findID_et_PhoneNum"
+        android:layout_width="190dp"
+        android:layout_height="40dp"
+        android:inputType="phone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/findID_et_Name" />
+
+    <Button
+        android:id="@+id/findID_bt_getAuthNum"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+
+        android:layout_marginTop="8dp"
+        android:text="인증번호 받기"
+        android:textSize="10sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.343"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/findID_et_PhoneNum"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <TextView
+        android:id="@+id/findID_tv_PhoneNum"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="휴대전화"
+        android:textSize="15dp"
+        app:layout_constraintBottom_toBottomOf="@+id/findID_et_PhoneNum"
+        app:layout_constraintEnd_toStartOf="@+id/findID_et_PhoneNum"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/findID_et_PhoneNum" />
+
+    <Button
+        android:id="@+id/findID_bt_Next"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="372dp"
+        android:text="다음"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/findID_Title"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <TextView
+        android:id="@+id/findID_tv_Name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="이름"
+
+        android:textSize="15dp"
+        app:layout_constraintBottom_toBottomOf="@+id/findID_et_Name"
+        app:layout_constraintEnd_toStartOf="@+id/findID_et_Name"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/findID_et_Name" />
+
+    <EditText
+        android:id="@+id/findID_et_Name"
+        android:layout_width="190dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="136dp"
+        android:inputType="textPersonName"
+        android:text=""
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/findID_Title" />
+
+    <EditText
+        android:id="@+id/findID_et_AuthNum"
+        android:layout_width="100dp"
+        android:layout_height="30dp"
+        android:ems="10"
+        android:inputType="number"
+        app:layout_constraintBottom_toBottomOf="@+id/findID_bt_getAuthNum"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.026"
+        app:layout_constraintStart_toEndOf="@+id/findID_bt_getAuthNum"
+        app:layout_constraintTop_toTopOf="@+id/findID_bt_getAuthNum"
+        app:layout_constraintVertical_bias="1.0" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

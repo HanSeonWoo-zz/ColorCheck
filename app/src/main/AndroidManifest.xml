@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.myapplication">
+
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="true" />
+
+    <uses-permission android:name="android.permission.CAMERA" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@drawable/notebook"
+        android:label="ColorCheck"
+        android:roundIcon="@drawable/notebook"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <activity android:name=".AddOrEdit"></activity>
+        <activity android:name=".SettingNickname" />
+        <activity android:name=".History_passwordCheck" />
+        <activity android:name=".Nickname" />
+        <activity android:name=".SettingPasswordCheck" />
+        <activity android:name=".VerInfo" />
+        <activity android:name=".Ask" />
+        <activity android:name=".SettingPassword" />
+        <activity android:name=".Withdrawal" />
+        <activity android:name=".FirstAuthActivity" />
+        <activity android:name=".FindPassword" />
+        <activity android:name=".FindID" />
+        <activity android:name=".Setting" />
+        <activity android:name=".SettingColor" />
+        <activity android:name=".SignUp" />
+        <activity android:name=".Login" />
+        <activity android:name=".History" />
+        <activity android:name=".Main" />
+        <activity android:name=".Camera" />
+        <activity android:name=".Splash">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="com.example.myapplication.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
+    </application>
+
+</manifest>
