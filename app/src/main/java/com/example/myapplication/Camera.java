@@ -582,13 +582,11 @@ public class Camera extends AppCompatActivity {
                 CoordiSet.addAll(rectangles_purple.get(i).getCoordiSet());
             }
             Gson gson = new Gson();
-            Log.v("값 체크", "CoordiSet " + gson.toJson(CoordiSet));
             Iterator<Coordinates> iter = CoordiSet.iterator();
             boolean[][] last_bool=new boolean[coloredBitmap.getWidth()][coloredBitmap.getHeight()];
             while(iter.hasNext()){
                 Coordinates a = iter.next();
                 last_bool[a.getX()][a.getY()]=true;
-                Log.v("값체크","last_bool" + a.getX() +" "+ a.getY());
             }
 
             boolean[] last_CheckX = new boolean[coloredBitmap.getWidth()];
@@ -606,12 +604,9 @@ public class Camera extends AppCompatActivity {
             for (i = 0; i < coloredBitmap.getWidth(); i++) {
                 if (last_CheckX[i]) {
                     last_arrayList.add(i);
-                    Log.v("값체크","arrayList " + i);
                 }
             }
             ArrayList<Rectangle> last_rectanglesDay = DayMaker(last_arrayList, last_bool);
-
-
 
             int distance = 15;
             try{
@@ -665,37 +660,58 @@ public class Camera extends AppCompatActivity {
                 Log.v("값 체크", "rectangles_purple " + i + "'s 사이즈 : " + rectangles_purple.get(i).size() + " | 평균위치 : " + rectangles_purple.get(i).getAverX() + " " + rectangles_purple.get(i).getAverY()
                         + " | 높이 : " + rectangles_purple.get(i).getHeight() + " | 시간 : " + time);
             }
+            double[] pink_day = new double[last_rectanglesDay.size()];
+            double[] orange_day = new double[last_rectanglesDay.size()];
+            double[] green_day = new double[last_rectanglesDay.size()];
+            double[] blue_day = new double[last_rectanglesDay.size()];
+            double[] purple_day = new double[last_rectanglesDay.size()];
 
-            int MON_MIN = 200;
-            int MON_MAX = 300;
-            int TUE_MIN = 360;
-            int TUE_MAX = 460;
-            int WED_MIN = 510;
-            int WED_MAX = 610;
-            int THU_MIN = 50;
-            int THU_MAX = 150;
-            int FRI_MIN = 210;
-            int FRI_MAX = 310;
-            int SAT_MIN = 380;
-            int SAT_MAX = 480;
-            int SUN_MIN = 540;
-            int SUN_MAX = 640;
+            for(i = 0 ; i < last_rectanglesDay.size() ; i ++){
+                int pos = last_rectanglesDay.get(i).getAverX();
+                pink_day[i]=0;
+                orange_day[i]=0;
+                green_day[i]=0;
+                blue_day[i]=0;
+                purple_day[i]=0;
 
+                for(j=0 ; j < rectangles_pink.size() ; j++){
+                    if(rectangles_pink.get(j).getAverX()-pos > -30 && rectangles_pink.get(j).getAverX()-pos < 30){
+                        time = Math.round((double) rectangles_pink.get(j).getHeight() / THIRTY_PIXEL) * 0.5;
+                        pink_day[i]+=time;
+                    }
+                }
 
-            double Day1 = 0;
-            double Day2 = 0;
-            double Day3 = 0;
-            double Day4 = 0;
-//            ArrayList<Double> ColorTime = new ArrayList<>();
-//
-//            com.example.myapplication.Color cr = new com.example.myapplication.Color();
-//            ArrayList<com.example.myapplication.Color> ALColor = getGsonPref();
-//            ALColor.add(cr);
-//            try {
-//                setGsonPref(ALColor);
-//            } catch (JSONException e) {
-//                e.printStackTrace();
-//            }
+                for(j=0 ; j < rectangles_orange.size() ; j++){
+                    if(rectangles_orange.get(j).getAverX()-pos > -30 && rectangles_orange.get(j).getAverX()-pos < 30){
+                        time = Math.round((double) rectangles_orange.get(j).getHeight() / THIRTY_PIXEL) * 0.5;
+                        orange_day[i]+=time;
+                    }
+                }
+
+                for(j=0 ; j < rectangles_green.size() ; j++){
+                    if(rectangles_green.get(j).getAverX()-pos > -30 && rectangles_green.get(j).getAverX()-pos < 30){
+                        time = Math.round((double) rectangles_green.get(j).getHeight() / THIRTY_PIXEL) * 0.5;
+                        green_day[i]+=time;
+                    }
+                }
+
+                for(j=0 ; j < rectangles_blue.size() ; j++){
+                    if(rectangles_blue.get(j).getAverX()-pos > -30 && rectangles_blue.get(j).getAverX()-pos < 30){
+                        time = Math.round((double) rectangles_blue.get(j).getHeight() / THIRTY_PIXEL) * 0.5;
+                        blue_day[i]+=time;
+                    }
+                }
+
+                for(j=0 ; j < rectangles_purple.size() ; j++){
+                    if(rectangles_purple.get(j).getAverX()-pos > -30 && rectangles_purple.get(j).getAverX()-pos < 30){
+                        time = Math.round((double) rectangles_purple.get(j).getHeight() / THIRTY_PIXEL) * 0.5;
+                        purple_day[i]+=time;
+                    }
+                }
+            }
+            for(i =0 ; i < last_rectanglesDay.size() ; i ++){
+                Log.v("값체크","Day"+i+" "+pink_day[i]+" "+orange_day[i]+" "+green_day[i]+" "+blue_day[i]+" "+purple_day[i]);
+            }
 
 
         }
@@ -815,7 +831,7 @@ public class Camera extends AppCompatActivity {
                         }
 
                         // 해당 COLOR가 10개 미만이면 원치 않는 '가로줄'에 해당하므로 제거
-                        if (count < 9) {
+                        if (count < 10) {
                             bool[i][j] = false;
                         }
                     }
