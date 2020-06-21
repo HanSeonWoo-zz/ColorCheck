@@ -5,20 +5,27 @@ import android.util.Log;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 
-public class Color {
+public class Color implements Comparable<Color>{
 
     private String date;
     private String StartTime;
     private String EndTime;
     private String color;
 
-    private double pink;
-    private double orange;
-    private double green;
-    private double blue;
-    private double purple;
+    private String pink;
+    private String orange;
+    private String green;
+    private String blue;
+    private String purple;
 
-    public Color(String date, double pink, double orange, double green, double blue, double purple) {
+
+
+    @Override
+    public int compareTo(Color o) {
+        return this.date.compareTo(o.date);
+    }
+
+    public Color(String date, String pink, String orange, String green, String blue, String purple) {
         this.date = date;
         this.pink = pink;
         this.orange = orange;
@@ -27,7 +34,45 @@ public class Color {
         this.purple = purple;
     }
 
+    public String getPink() {
+        return pink;
+    }
 
+    public void setPink(String pink) {
+        this.pink = pink;
+    }
+
+    public String getOrange() {
+        return orange;
+    }
+
+    public void setOrange(String orange) {
+        this.orange = orange;
+    }
+
+    public String getGreen() {
+        return green;
+    }
+
+    public void setGreen(String green) {
+        this.green = green;
+    }
+
+    public String getBlue() {
+        return blue;
+    }
+
+    public void setBlue(String blue) {
+        this.blue = blue;
+    }
+
+    public String getPurple() {
+        return purple;
+    }
+
+    public void setPurple(String purple) {
+        this.purple = purple;
+    }
 
     public String getDate() {
         return date;
@@ -90,4 +135,6 @@ public class Color {
         Log.v("값체크",EndTime);
         Log.v("값체크",color);
     }
+
+
 }

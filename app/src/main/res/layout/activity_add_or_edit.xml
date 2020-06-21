@@ -15,191 +15,138 @@
         app:layout_constraintBottom_toBottomOf="@+id/AD_date"
         app:layout_constraintEnd_toStartOf="@+id/divider6"
         app:layout_constraintTop_toTopOf="@+id/AD_date"
-        app:layout_constraintVertical_bias="0.44" />
+        app:layout_constraintVertical_bias="0.44"
+        />
 
     <EditText
         android:id="@+id/AD_date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="16dp"
-        android:layout_marginTop="150dp"
-        android:ems="10"
-        android:inputType="date"
+        android:layout_marginTop="140dp"
         android:clickable="true"
+        android:ems="8"
         android:focusable="false"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/divider6"
+        android:inputType="date"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/tv_StartTime"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="시작 시간"
-        android:textSize="15dp"
-        app:layout_constraintBottom_toBottomOf="@+id/AD_StartTime"
-        app:layout_constraintEnd_toStartOf="@+id/divider6"
-        app:layout_constraintTop_toTopOf="@+id/AD_StartTime"
-         />
-
     <EditText
-        android:id="@+id/AD_StartTime"
+        android:id="@+id/AD_pink"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="16dp"
         android:layout_marginTop="16dp"
-        android:ems="10"
-        android:inputType="time"
         android:clickable="true"
+        android:ems="8"
         android:focusable="false"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/divider6"
+        android:inputType="number"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/AD_date" />
 
-    <TextView
-        android:id="@+id/tv_EndTime"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="종료 시간"
-        android:textSize="15dp"
-        app:layout_constraintBottom_toBottomOf="@+id/AD_EndTime"
-        app:layout_constraintEnd_toStartOf="@+id/divider6"
-        app:layout_constraintTop_toTopOf="@+id/AD_EndTime"/>
-
     <EditText
-        android:id="@+id/AD_EndTime"
+        android:id="@+id/AD_orange"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:ems="10"
-        android:layout_marginLeft="16dp"
         android:layout_marginTop="16dp"
-        android:inputType="time"
         android:clickable="true"
+        android:ems="8"
         android:focusable="false"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/divider6"
-        app:layout_constraintTop_toBottomOf="@id/AD_StartTime" />
-
-    <TextView
-        android:id="@+id/tv_color"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="컬러"
-        android:textSize="15dp"
-        app:layout_constraintBottom_toBottomOf="@+id/AD_color"
-        app:layout_constraintEnd_toStartOf="@+id/divider6"
-        app:layout_constraintTop_toTopOf="@+id/AD_color" />
+        android:inputType="time"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/AD_pink" />
 
     <EditText
-        android:id="@+id/AD_color"
+        android:id="@+id/AD_green"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="16dp"
         android:layout_marginTop="16dp"
-        android:ems="10"
+        android:ems="8"
         android:inputType="number"
-        app:layout_constraintBottom_toTopOf="@id/AD_bt"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/divider6"
-        app:layout_constraintTop_toBottomOf="@id/AD_EndTime" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/AD_orange" />
+
+    <EditText
+        android:id="@+id/AD_blue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:ems="8"
+        android:inputType="number"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/AD_green" />
+
+    <EditText
+        android:id="@+id/AD_purple"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:ems="8"
+        android:inputType="number"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/AD_blue" />
 
 
     <Button
         android:id="@+id/AD_bt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="70dp"
+        android:layout_marginTop="20dp"
         android:background="@color/colorgreen"
         android:text="수정"
         android:textColor="#FFFFFF"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/AD_color" />
+        app:layout_constraintTop_toBottomOf="@+id/AD_purple" />
 
+    <Button
+        android:id="@+id/box_pink"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:background="@color/colorpink"
+        app:layout_constraintBottom_toBottomOf="@+id/AD_pink"
+        app:layout_constraintEnd_toStartOf="@+id/divider6"
+        app:layout_constraintTop_toTopOf="@+id/AD_pink" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:orientation="horizontal"
-        android:weightSum="10"
-        app:layout_constraintBottom_toTopOf="@+id/AD_bt"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/AD_color">
+    <Button
+        android:id="@+id/box_orange"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:background="@color/colororange"
+        app:layout_constraintBottom_toBottomOf="@+id/AD_orange"
+        app:layout_constraintEnd_toStartOf="@+id/divider6"
+        app:layout_constraintTop_toTopOf="@+id/AD_orange" />
 
-        <TextView
-            android:id="@+id/tv1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:gravity="right"
-            android:text="1 :" />
+    <Button
+        android:id="@+id/box_green"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:background="@color/colorgreen"
+        app:layout_constraintBottom_toBottomOf="@+id/AD_green"
+        app:layout_constraintEnd_toStartOf="@+id/divider6"
+        app:layout_constraintTop_toTopOf="@+id/AD_green" />
 
-        <Button
-            android:id="@+id/box_pink"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:background="@color/colorpink" />
+    <Button
+        android:id="@+id/box_blue"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:background="@color/colorblue"
+        app:layout_constraintBottom_toBottomOf="@+id/AD_blue"
+        app:layout_constraintEnd_toStartOf="@+id/divider6"
+        app:layout_constraintTop_toTopOf="@+id/AD_blue" />
 
-        <TextView
-            android:id="@+id/tv2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:gravity="right"
-            android:text="2 :" />
-
-        <Button
-            android:id="@+id/box_orange"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:background="@color/colororange" />
-
-        <TextView
-            android:id="@+id/tv3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:gravity="right"
-            android:text="3 :" />
-
-        <Button
-            android:id="@+id/box_green"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:background="@color/colorgreen" />
-
-        <TextView
-            android:id="@+id/tv4"
-            android:layout_width="wrap_content"
-
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:gravity="right"
-            android:text="4 :" />
-
-        <Button
-            android:id="@+id/box_blue"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:background="@color/colorblue" />
-
-        <TextView
-            android:id="@+id/tv5"
-            android:layout_width="wrap_content"
-
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:gravity="right"
-            android:text="5 :" />
-
-        <Button
-            android:id="@+id/box_purple"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:background="@color/colorpurple" />
-    </LinearLayout>
+    <Button
+        android:id="@+id/box_purple"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:background="@color/colorpurple"
+        app:layout_constraintBottom_toBottomOf="@+id/AD_purple"
+        app:layout_constraintEnd_toStartOf="@+id/divider6"
+        app:layout_constraintTop_toTopOf="@+id/AD_purple" />
 
     <View
         android:id="@+id/divider6"

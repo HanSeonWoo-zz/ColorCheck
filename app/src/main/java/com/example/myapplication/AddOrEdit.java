@@ -1,7 +1,6 @@
 package com.example.myapplication;
 
 import android.app.DatePickerDialog;
-import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -10,7 +9,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.TimePicker;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -39,9 +37,11 @@ public class AddOrEdit extends AppCompatActivity {
     };
 
     EditText date;
-    EditText StartTime;
-    EditText EndTime;
-    EditText Color;
+    EditText pink;
+    EditText orange;
+    EditText green;
+    EditText blue;
+    EditText purple;
     ArrayList<Color> mData;
     Button bt;
     String type;
@@ -58,9 +58,11 @@ public class AddOrEdit extends AppCompatActivity {
         type = intent.getStringExtra("Type");
 
         date = findViewById(R.id.AD_date);
-        StartTime = findViewById(R.id.AD_StartTime);
-        EndTime = findViewById(R.id.AD_EndTime);
-        Color = findViewById(R.id.AD_color);
+        pink = findViewById(R.id.AD_pink);
+        orange = findViewById(R.id.AD_orange);
+        green = findViewById(R.id.AD_green);
+        blue = findViewById(R.id.AD_blue);
+        purple = findViewById(R.id.AD_purple);
         bt=findViewById(R.id.AD_bt);
 
         mData = getGsonPref();
@@ -73,9 +75,11 @@ public class AddOrEdit extends AppCompatActivity {
             bt.setText("수정하기");
             if(mData.size()>0) {
                 date.setText(mData.get(Pos).getDate());
-                StartTime.setText(mData.get(Pos).getStartTime());
-                EndTime.setText(mData.get(Pos).getEndTime());
-                Color.setText(mData.get(Pos).getColor());
+                pink.setText(mData.get(Pos).getPink());
+                orange.setText(mData.get(Pos).getOrange());
+                green.setText(mData.get(Pos).getGreen());
+                blue.setText(mData.get(Pos).getBlue());
+                purple.setText(mData.get(Pos).getPurple());
             }
         }
 
@@ -88,50 +92,50 @@ public class AddOrEdit extends AppCompatActivity {
             }
         });
 
-        // 시작 시간 / 타임 픽커
-        StartTime.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Calendar mcurrentTime = Calendar.getInstance();
-                int hour = mcurrentTime.get(Calendar.HOUR_OF_DAY);
-                int minute = mcurrentTime.get(Calendar.MINUTE);
-                TimePickerDialog mTimePicker;
-                mTimePicker = new TimePickerDialog(AddOrEdit.this, new TimePickerDialog.OnTimeSetListener() {
-                    @Override
-                    public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
-                            StartTime.setText(selectedHour + ":" + selectedMinute);
-                    }
-                }, hour, minute, true); // true의 경우 24시간 형식의 TimePicker 출현
-                mTimePicker.setTitle("Select Time");
-                mTimePicker.show();
-            }
-        });
-
-        // 끝 시간 / 타임 픽커
-        EndTime.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Calendar mcurrentTime = Calendar.getInstance();
-                int hour = mcurrentTime.get(Calendar.HOUR_OF_DAY);
-                int minute = mcurrentTime.get(Calendar.MINUTE);
-                TimePickerDialog mTimePicker;
-                mTimePicker = new TimePickerDialog(AddOrEdit.this, new TimePickerDialog.OnTimeSetListener() {
-                    @Override
-                    public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
-                        EndTime.setText(selectedHour + ":" + selectedMinute);
-                    }
-                }, hour, minute, true); // true의 경우 24시간 형식의 TimePicker 출현
-                mTimePicker.setTitle("Select Time");
-                mTimePicker.show();
-            }
-        });
+//        // 시작 시간 / 타임 픽커
+//        StartTime.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Calendar mcurrentTime = Calendar.getInstance();
+//                int hour = mcurrentTime.get(Calendar.HOUR_OF_DAY);
+//                int minute = mcurrentTime.get(Calendar.MINUTE);
+//                TimePickerDialog mTimePicker;
+//                mTimePicker = new TimePickerDialog(AddOrEdit.this, new TimePickerDialog.OnTimeSetListener() {
+//                    @Override
+//                    public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
+//                            StartTime.setText(selectedHour + ":" + selectedMinute);
+//                    }
+//                }, hour, minute, true); // true의 경우 24시간 형식의 TimePicker 출현
+//                mTimePicker.setTitle("Select Time");
+//                mTimePicker.show();
+//            }
+//        });
+//
+//        // 끝 시간 / 타임 픽커
+//        EndTime.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Calendar mcurrentTime = Calendar.getInstance();
+//                int hour = mcurrentTime.get(Calendar.HOUR_OF_DAY);
+//                int minute = mcurrentTime.get(Calendar.MINUTE);
+//                TimePickerDialog mTimePicker;
+//                mTimePicker = new TimePickerDialog(AddOrEdit.this, new TimePickerDialog.OnTimeSetListener() {
+//                    @Override
+//                    public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
+//                        EndTime.setText(selectedHour + ":" + selectedMinute);
+//                    }
+//                }, hour, minute, true); // true의 경우 24시간 형식의 TimePicker 출현
+//                mTimePicker.setTitle("Select Time");
+//                mTimePicker.show();
+//            }
+//        });
 
         // 수정 버튼 : 저장 후 Activity 종료
         bt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Color cr = new Color(date.getText().toString(), StartTime.getText().toString(),
-                        EndTime.getText().toString(), Color.getText().toString());
+                Color cr = new Color(date.getText().toString(), pink.getText().toString(),
+                        orange.getText().toString(), green.getText().toString(), blue.getText().toString(), purple.getText().toString());
                 if(type.contentEquals("ADD")){
                     mData.add(0,cr);
                 }

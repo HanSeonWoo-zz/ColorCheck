@@ -26,19 +26,23 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
         // OnCreateContextMenuListener 리스너를 구현해야 합니다.
 
         protected TextView date;
-        protected TextView StartTime;
-        protected TextView EndTime;
-        protected TextView color;
+        protected TextView pink;
+        protected TextView orange;
+        protected TextView green;
+        protected TextView blue;
+        protected TextView purple;
 
 
         ViewHolder(View itemView) {
             super(itemView);
 
             // 뷰 객체에 대한 참조. (hold strong reference)
-            date = itemView.findViewById(R.id.item_date);
-            StartTime = itemView.findViewById(R.id.item_StartTime);
-            EndTime = itemView.findViewById(R.id.item_EndTime);
-            color = itemView.findViewById(R.id.item_color);
+            date = itemView.findViewById(R.id.recycler_tv_date);
+            pink = itemView.findViewById(R.id.tv_pink);
+            orange = itemView.findViewById(R.id.tv_orange);
+            green = itemView.findViewById(R.id.tv_green);
+            blue = itemView.findViewById(R.id.tv_blue);
+            purple = itemView.findViewById(R.id.tv_purple);
 
             itemView.setOnCreateContextMenuListener(this);
             //2. OnCreateContextMenuListener 리스너를 현재 클래스에서 구현한다고 설정해둡니다.
@@ -162,7 +166,7 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
         Context context = parent.getContext();
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-        View view = inflater.inflate(R.layout.recyclerview_item, parent, false);
+        View view = inflater.inflate(R.layout.history_item, parent, false);
         CustomAdapter.ViewHolder vh = new CustomAdapter.ViewHolder(view);
 
         return vh;
@@ -181,27 +185,32 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
 //        holder.korean.setGravity(Gravity.CENTER);
 
         holder.date.setText(mData.get(position).getDate());
-        holder.StartTime.setText(mData.get(position).getStartTime());
-        holder.EndTime.setText(mData.get(position).getEndTime());
-        //holder.color.setText(mData.get(position).getColor());
-        if(mData.get(position).getColor().contentEquals("1")){
-            holder.color.setBackgroundColor(0xFFFE2E9A);
-        }
-        else if(mData.get(position).getColor().contentEquals("2")){
-            holder.color.setBackgroundColor(0xFFFF8000);
-        }
-        else if(mData.get(position).getColor().contentEquals("3")){
-            holder.color.setBackgroundColor(0xFF1E8037);
-        }
-        else if(mData.get(position).getColor().contentEquals("4")){
-            holder.color.setBackgroundColor(0xFF0000FF);
-        }
-        else if(mData.get(position).getColor().contentEquals("5")){
-            holder.color.setBackgroundColor(0xFFA901DB);
-        }
-        else{
-            holder.color.setBackgroundColor(0xFFFFFFFF);
-        }
+        holder.pink.setText(mData.get(position).getPink());
+        holder.orange.setText(mData.get(position).getOrange());
+        holder.green.setText(mData.get(position).getGreen());
+        holder.blue.setText(mData.get(position).getBlue());
+        holder.purple.setText(mData.get(position).getPurple());
+
+//        holder.EndTime.setText(mData.get(position).getEndTime());
+//        //holder.color.setText(mData.get(position).getColor());
+//        if(mData.get(position).getColor().contentEquals("1")){
+//            holder.color.setBackgroundColor(0xFFFE2E9A);
+//        }
+//        else if(mData.get(position).getColor().contentEquals("2")){
+//            holder.color.setBackgroundColor(0xFFFF8000);
+//        }
+//        else if(mData.get(position).getColor().contentEquals("3")){
+//            holder.color.setBackgroundColor(0xFF1E8037);
+//        }
+//        else if(mData.get(position).getColor().contentEquals("4")){
+//            holder.color.setBackgroundColor(0xFF0000FF);
+//        }
+//        else if(mData.get(position).getColor().contentEquals("5")){
+//            holder.color.setBackgroundColor(0xFFA901DB);
+//        }
+//        else{
+//            holder.color.setBackgroundColor(0xFFFFFFFF);
+//        }
 
     }
 
