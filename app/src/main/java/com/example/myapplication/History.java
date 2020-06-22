@@ -17,6 +17,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class History extends AppCompatActivity {
 
@@ -31,6 +32,7 @@ public class History extends AppCompatActivity {
         super.onResume();
         Log.v("위치체크","History_onResume");
         mArrayList = getGsonPref();
+        Collections.sort(mArrayList);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this)) ;
         mAdapter = new CustomAdapter(this ,mArrayList) ;

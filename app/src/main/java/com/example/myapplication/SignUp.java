@@ -22,7 +22,6 @@ import com.google.gson.Gson;
 
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.regex.Matcher;
@@ -258,31 +257,6 @@ public class SignUp extends AppCompatActivity {
         imm.hideSoftInputFromWindow(passwordInput.getWindowToken(), 0);
         imm.hideSoftInputFromWindow(passwordCheck.getWindowToken(), 0);
 
-    }
-
-    private void setColorObjectPref(String id, ArrayList<Color> classes) throws JSONException {
-        SharedPreferences prefs = getSharedPreferences(id, MODE_PRIVATE);
-        SharedPreferences.Editor editor = prefs.edit();
-        JSONObject ob;
-        JSONArray ar = new JSONArray();
-
-
-        for (int i = 0; i < classes.size(); i++) {
-            ob = new JSONObject();
-            ob.put("date",classes.get(i).getDate());
-            ob.put("StartTime",classes.get(i).getStartTime());
-            ob.put("EndTime",classes.get(i).getEndTime());
-            ob.put("Color",classes.get(i).getColor());
-            ar.put(ob);
-        }
-
-        if (!classes.isEmpty()) {
-            editor.putString(id, ar.toString());
-            Log.v("값 체크",ar.toString());
-        } else {
-            editor.putString(id, null);
-        }
-        editor.apply();
     }
 
     private void setGsonPref(String id, ArrayList<Color> classes) throws JSONException {

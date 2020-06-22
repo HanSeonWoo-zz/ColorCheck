@@ -8,29 +8,6 @@
 
 
     <Button
-        android:id="@+id/bt_pink"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_marginStart="32dp"
-        android:layout_marginLeft="32dp"
-        android:layout_marginTop="40dp"
-        android:background="@color/colorpink"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <Button
-        android:id="@+id/bt_orange"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_marginEnd="24dp"
-        android:layout_marginRight="24dp"
-        android:background="@color/colororange"
-        app:layout_constraintBottom_toBottomOf="@+id/bt_green"
-        app:layout_constraintEnd_toStartOf="@+id/bt_green"
-        app:layout_constraintTop_toTopOf="@+id/bt_green"
-        app:layout_constraintVertical_bias="1.0" />
-
-    <Button
         android:id="@+id/bt_green"
         android:layout_width="50dp"
         android:layout_height="50dp"
@@ -40,26 +17,6 @@
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
-    <Button
-        android:id="@+id/bt_blue"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_marginLeft="20dp"
-        android:background="@color/colorblue"
-        app:layout_constraintBottom_toBottomOf="@+id/bt_green"
-        app:layout_constraintStart_toEndOf="@+id/bt_green"
-        app:layout_constraintTop_toTopOf="@+id/bt_green" />
-
-    <Button
-        android:id="@+id/bt_purple"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_marginLeft="20dp"
-        android:background="@color/colorpurple"
-        app:layout_constraintBottom_toBottomOf="@+id/bt_blue"
-        app:layout_constraintStart_toEndOf="@+id/bt_blue"
-        app:layout_constraintTop_toTopOf="@+id/bt_blue" />
 
     <ImageView
         android:id="@+id/Camera_iv_image"
@@ -82,58 +39,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/day1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:padding="7dp"
-        android:text="TextView"
-        android:textSize="20dp"
-        android:visibility="invisible"
-        app:layout_constraintBottom_toBottomOf="@+id/bt_pink"
-        app:layout_constraintStart_toEndOf="@+id/bt_pink"
-        app:layout_constraintTop_toTopOf="@+id/bt_pink" />
-
-    <TextView
-        android:id="@+id/day2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:padding="7dp"
-        android:text="TextView"
-        android:textSize="20dp"
-        android:visibility="invisible"
-        app:layout_constraintBottom_toBottomOf="@+id/day1"
-        app:layout_constraintStart_toEndOf="@+id/day1"
-        app:layout_constraintTop_toTopOf="@+id/day1" />
-
-    <TextView
-        android:id="@+id/day3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:padding="7dp"
-        android:text="TextView"
-        android:textSize="20dp"
-        android:visibility="invisible"
-        app:layout_constraintBottom_toBottomOf="@+id/day2"
-        app:layout_constraintStart_toEndOf="@+id/day2"
-        app:layout_constraintTop_toTopOf="@+id/day2" />
-
-    <TextView
-        android:id="@+id/day4"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:padding="7dp"
-        android:text="TextView"
-        android:textSize="20dp"
-        android:visibility="invisible"
-        app:layout_constraintBottom_toBottomOf="@+id/day3"
-        app:layout_constraintStart_toEndOf="@+id/day3"
-        app:layout_constraintTop_toTopOf="@+id/day3" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

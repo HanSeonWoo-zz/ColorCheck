@@ -20,6 +20,7 @@ import org.json.JSONException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Locale;
 
 public class AddOrEdit extends AppCompatActivity {
@@ -70,6 +71,19 @@ public class AddOrEdit extends AppCompatActivity {
 
         if(type.contentEquals("ADD")){
             bt.setText("추가하기");
+            Date currentTime = Calendar.getInstance().getTime();
+            String date_text = new SimpleDateFormat("yyyy년 MM월 dd일 EE요일", Locale.getDefault()).format(currentTime);
+
+//            SimpleDateFormat weekdayFormat = new SimpleDateFormat("EE", Locale.getDefault());
+//            SimpleDateFormat dayFormat = new SimpleDateFormat("dd", Locale.getDefault());
+//            SimpleDateFormat monthFormat = new SimpleDateFormat("MM", Locale.getDefault());
+//            SimpleDateFormat yearFormat = new SimpleDateFormat("yyyy", Locale.getDefault());
+//            String weekDay = weekdayFormat.format(currentTime);
+//            String year = yearFormat.format(currentTime);
+//            String month = monthFormat.format(currentTime);
+//            String day = dayFormat.format(currentTime);
+
+            date.setText(date_text);
         }
         else if(type.contentEquals("EDIT")){
             bt.setText("수정하기");
@@ -92,43 +106,6 @@ public class AddOrEdit extends AppCompatActivity {
             }
         });
 
-//        // 시작 시간 / 타임 픽커
-//        StartTime.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Calendar mcurrentTime = Calendar.getInstance();
-//                int hour = mcurrentTime.get(Calendar.HOUR_OF_DAY);
-//                int minute = mcurrentTime.get(Calendar.MINUTE);
-//                TimePickerDialog mTimePicker;
-//                mTimePicker = new TimePickerDialog(AddOrEdit.this, new TimePickerDialog.OnTimeSetListener() {
-//                    @Override
-//                    public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
-//                            StartTime.setText(selectedHour + ":" + selectedMinute);
-//                    }
-//                }, hour, minute, true); // true의 경우 24시간 형식의 TimePicker 출현
-//                mTimePicker.setTitle("Select Time");
-//                mTimePicker.show();
-//            }
-//        });
-//
-//        // 끝 시간 / 타임 픽커
-//        EndTime.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Calendar mcurrentTime = Calendar.getInstance();
-//                int hour = mcurrentTime.get(Calendar.HOUR_OF_DAY);
-//                int minute = mcurrentTime.get(Calendar.MINUTE);
-//                TimePickerDialog mTimePicker;
-//                mTimePicker = new TimePickerDialog(AddOrEdit.this, new TimePickerDialog.OnTimeSetListener() {
-//                    @Override
-//                    public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
-//                        EndTime.setText(selectedHour + ":" + selectedMinute);
-//                    }
-//                }, hour, minute, true); // true의 경우 24시간 형식의 TimePicker 출현
-//                mTimePicker.setTitle("Select Time");
-//                mTimePicker.show();
-//            }
-//        });
 
         // 수정 버튼 : 저장 후 Activity 종료
         bt.setOnClickListener(new View.OnClickListener() {
@@ -158,7 +135,7 @@ public class AddOrEdit extends AppCompatActivity {
     }
 
     private void updateLabel() {
-        String myFormat = "yyyy/MM/dd";    // 출력형식   2018/11/28
+        String myFormat = "yyyy년 MM월 dd일 EE요일";    // 출력형식   2018년 12월 25일 금요일
         SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.KOREA);
 
         EditText et_date = findViewById(R.id.AD_date);

@@ -60,63 +60,6 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
                         mContext.startActivity(intent);
                         notifyItemChanged(pos);
 
-
-                        // Color cr = mData.get(pos) ;
-
-                        // 다이얼로그 방식
-                       /* {
-                            AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-
-                            // 다이얼로그를 보여주기 위해 edit_box.xml 파일을 사용합니다.
-
-                            View view = LayoutInflater.from(mContext)
-                                    .inflate(R.layout.edit_box, null, false);
-                            builder.setView(view);
-                            final Button ButtonSubmit = (Button) view.findViewById(R.id.button_dialog_submit);
-
-                            final EditText editdate = view.findViewById(R.id.edit_date);
-                            final EditText editStartTime = view.findViewById(R.id.edit_StartTime);
-                            final EditText editEndTime = view.findViewById(R.id.edit_EndTime);
-                            final EditText editcolor = view.findViewById(R.id.edit_color);
-
-
-                            // 6. 해당 줄에 입력되어 있던 데이터를 불러와서 다이얼로그에 보여줍니다.
-                            editdate.setText(mData.get(getAdapterPosition()).getDate());
-                            editStartTime.setText(mData.get(getAdapterPosition()).getStartTime());
-                            editEndTime.setText(mData.get(getAdapterPosition()).getEndTime());
-                            editcolor.setText(mData.get(getAdapterPosition()).getColor());
-
-
-                            final AlertDialog dialog = builder.create();
-                            ButtonSubmit.setOnClickListener(new View.OnClickListener() {
-
-
-                                // 7. 수정 버튼을 클릭하면 현재 UI에 입력되어 있는 내용으로
-
-                                public void onClick(View v) {
-                                    String strdate = editdate.getText().toString();
-                                    String strStartTime = editStartTime.getText().toString();
-                                    String strEndTime = editEndTime.getText().toString();
-                                    String strcolor = editcolor.getText().toString();
-
-                                    Color cr = new Color(strdate, strStartTime, strEndTime, strcolor);
-
-                                    // 8. ListArray에 있는 데이터를 변경하고
-                                    mData.set(getAdapterPosition(), cr);
-
-
-                                    // 9. 어댑터에서 RecyclerView에 반영하도록 합니다.
-
-                                    notifyItemChanged(getAdapterPosition());
-
-                                    dialog.dismiss();
-                                }
-                            });
-
-                            dialog.show();
-
-
-                        }*/
                     }
                 }
             });
