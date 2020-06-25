@@ -72,7 +72,7 @@ public class AddOrEdit extends AppCompatActivity {
         if(type.contentEquals("ADD")){
             bt.setText("추가하기");
             Date currentTime = Calendar.getInstance().getTime();
-            String date_text = new SimpleDateFormat("yyyy년 MM월 dd일 EE요일", Locale.getDefault()).format(currentTime);
+            String date_text = new SimpleDateFormat("yyyy년 MM월 dd일 E", Locale.getDefault()).format(currentTime);
 
 //            SimpleDateFormat weekdayFormat = new SimpleDateFormat("EE", Locale.getDefault());
 //            SimpleDateFormat dayFormat = new SimpleDateFormat("dd", Locale.getDefault());
@@ -135,7 +135,7 @@ public class AddOrEdit extends AppCompatActivity {
     }
 
     private void updateLabel() {
-        String myFormat = "yyyy년 MM월 dd일 EE요일";    // 출력형식   2018년 12월 25일 금요일
+        String myFormat = "yyyy년 MM월 dd일 E";    // 출력형식   2018년 12월 25일 금요일
         SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.KOREA);
 
         EditText et_date = findViewById(R.id.AD_date);

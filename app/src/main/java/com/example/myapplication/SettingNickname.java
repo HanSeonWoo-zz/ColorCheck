@@ -2,7 +2,6 @@ package com.example.myapplication;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -28,7 +27,7 @@ public class SettingNickname extends AppCompatActivity {
         pref_Logined = getSharedPreferences("Logined", MODE_PRIVATE);
         pref_Nickname = getSharedPreferences("Nickname", MODE_PRIVATE);
         editor_Nickname = pref_Nickname.edit();
-        nickname = pref_Nickname.getString(pref_Logined.getString("ID",""),"");
+        nickname = pref_Nickname.getString(pref_Logined.getString("ID", ""), "");
 
 
         et.setText(nickname);
@@ -36,21 +35,11 @@ public class SettingNickname extends AppCompatActivity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                if(nickname.contentEquals("")){
-                    Log.v("값체크","Setting_Nickname : Logined정보가 안넘어 왔어");
-                }
-                else{
-                    editor_Nickname.putString(pref_Logined.getString("ID",""), et.getText().toString());
-                    editor_Nickname.commit();
-                    finish();
-                }
-
-
-
+                editor_Nickname.putString(pref_Logined.getString("ID", ""), et.getText().toString());
+                editor_Nickname.commit();
+                finish();
             }
         });
-
 
 
     }

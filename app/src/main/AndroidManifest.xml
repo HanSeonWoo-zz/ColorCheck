@@ -10,6 +10,7 @@
         android:required="true" />
 
     <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
@@ -18,7 +19,13 @@
         android:roundIcon="@drawable/notebook"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".AddOrEdit"></activity>
+        <service
+            android:name=".MyService"
+            android:enabled="true"
+            android:exported="true"></service>
+
+        <activity android:name=".DateInput" />
+        <activity android:name=".AddOrEdit" />
         <activity android:name=".SettingNickname" />
         <activity android:name=".History_passwordCheck" />
         <activity android:name=".Nickname" />

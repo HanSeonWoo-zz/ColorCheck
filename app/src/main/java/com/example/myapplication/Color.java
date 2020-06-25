@@ -35,6 +35,9 @@ public class Color implements Comparable<Color> {
     }
 
     public String getPink() {
+        if (pink.contentEquals("")) {
+            return "0";
+        }
         return pink;
     }
 
@@ -43,6 +46,9 @@ public class Color implements Comparable<Color> {
     }
 
     public String getOrange() {
+        if (orange.contentEquals("")) {
+            return "0";
+        }
         return orange;
     }
 
@@ -51,6 +57,9 @@ public class Color implements Comparable<Color> {
     }
 
     public String getGreen() {
+        if(green.contentEquals("")){
+            return "0";
+        }
         return green;
     }
 
@@ -59,6 +68,9 @@ public class Color implements Comparable<Color> {
     }
 
     public String getBlue() {
+        if(blue.contentEquals("")){
+            return "0";
+        }
         return blue;
     }
 
@@ -67,6 +79,9 @@ public class Color implements Comparable<Color> {
     }
 
     public String getPurple() {
+        if(purple.contentEquals("")){
+            return "0";
+        }
         return purple;
     }
 

@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -25,6 +26,13 @@ public class History extends AppCompatActivity {
     private CustomAdapter mAdapter;
     RecyclerView recyclerView;
     private int count = -1;
+    TextView pink;
+    TextView orange;
+    TextView green;
+    TextView blue;
+    TextView purple;
+    SharedPreferences pref_Color;
+    SharedPreferences pref_Logined;
 
 
     @Override
@@ -50,11 +58,7 @@ public class History extends AppCompatActivity {
     protected void onPause(){
         super.onPause();
         Log.v("위치체크","History_onPause");
-        try {
             setGsonPref(mArrayList);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
     }
     @Override
     protected void onDestroy(){
@@ -80,6 +84,21 @@ public class History extends AppCompatActivity {
         mAdapter = new CustomAdapter(this ,mArrayList) ;
         recyclerView.setAdapter(mAdapter) ;
 
+        pref_Logined = getSharedPreferences("Logined", MODE_PRIVATE);
+        pref_Color = getSharedPreferences("Color" + pref_Logined.getString("ID", ""), MODE_PRIVATE);
+
+        pink = findViewById(R.id.main_tv1);
+        orange = findViewById(R.id.main_tv2);
+        green = findViewById(R.id.main_tv3);
+        blue = findViewById(R.id.main_tv4);
+        purple = findViewById(R.id.main_tv5);
+
+        pink.setText(pref_Color.getString("PINK", "자습"));
+        orange.setText(pref_Color.getString("ORANGE", "수업"));
+        green.setText(pref_Color.getString("GREEN", "개인업무"));
+        blue.setText(pref_Color.getString("BLUE", "자기계발"));
+        purple.setText(pref_Color.getString("PURPLE", "네트워킹"));
+
 
 
         Button buttonInsert = findViewById(R.id.history_add);
@@ -90,6 +109,15 @@ public class History extends AppCompatActivity {
                 Intent intent = new Intent(History.this, AddOrEdit.class);
                 intent.putExtra("Type","ADD");
                 startActivity(intent);
+            }
+        });
+
+        Button delete = findViewById(R.id.history_delete);
+        delete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mArrayList = new ArrayList<>();
+                setGsonPref(mArrayList);
             }
         });
 
@@ -121,7 +149,7 @@ public class History extends AppCompatActivity {
         return urls;
     }
 
-    private void setGsonPref(ArrayList<Color> classes) throws JSONException {
+    private void setGsonPref(ArrayList<Color> classes) {
         SharedPreferences pref = getSharedPreferences("Logined",MODE_PRIVATE);
         String id  = pref.getString("ID","");
         Log.v("값 체크","setGsonPref_로그인된 아이디 : "+id);

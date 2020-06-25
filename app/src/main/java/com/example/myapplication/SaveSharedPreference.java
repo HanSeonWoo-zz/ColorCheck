@@ -1,6 +1,18 @@
 package com.example.myapplication;
 
 /*
+///이건 어때
+    ID
+useSubPassword - true/false
+subPassword - 1234
+Nickname - 선우
+PINK
+ORANGE
+GREEN
+BLUE
+PURPLE
+History
+PickedDate - 2020년 06월 22일 월
 
     Logined
     "ID" 로그인된 아이디를 보여줌.
