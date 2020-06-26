@@ -21,71 +21,46 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 public class History extends AppCompatActivity {
-
+    SharedPreferences pref;
     private ArrayList<Color> mArrayList;
     private CustomAdapter mAdapter;
     RecyclerView recyclerView;
-    private int count = -1;
     TextView pink;
     TextView orange;
     TextView green;
     TextView blue;
     TextView purple;
-    SharedPreferences pref_Color;
-    SharedPreferences pref_Logined;
-
+    Button buttonInsert;
+    Button delete;
 
     @Override
-    protected void onResume(){
+    protected void onResume() {
         super.onResume();
-        Log.v("위치체크","History_onResume");
+        Log.v("위치체크", "History_onResume");
         mArrayList = getGsonPref();
         Collections.sort(mArrayList);
 
-        recyclerView.setLayoutManager(new LinearLayoutManager(this)) ;
-        mAdapter = new CustomAdapter(this ,mArrayList) ;
-        recyclerView.setAdapter(mAdapter) ;
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        mAdapter = new CustomAdapter(this, mArrayList);
+        recyclerView.setAdapter(mAdapter);
+    }
 
-        //mAdapter.notifyDataSetChanged();
-        Log.v("값 체크","History_onResume에서 사이즈 : "+mArrayList.size());
-    }
     @Override
-    protected void onStop(){
-        super.onStop();
-        Log.v("위치체크","History_onStop");
-    }
-    @Override
-    protected void onPause(){
+    protected void onPause() {
         super.onPause();
-        Log.v("위치체크","History_onPause");
-            setGsonPref(mArrayList);
+        Log.v("위치체크", "History_onPause");
+        setGsonPref(mArrayList);
     }
-    @Override
-    protected void onDestroy(){
-        super.onDestroy();
-//        Log.v("위치체크","History_onDestroy");
-    }
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_history);
 
-        // 리사이클러뷰에 표시할 데이터 리스트 가져오기
-        mArrayList = getGsonPref();
-        Log.v("값 체크","History에서의 사이즈 : "+mArrayList.size());
+        pref = getSharedPreferences("1",MODE_PRIVATE);
 
-        // 리사이클러뷰에 LinearLayoutManager 객체 지정.
-        recyclerView = findViewById(R.id.recycler1) ;
-        recyclerView.setLayoutManager(new LinearLayoutManager(this)) ;
-
-        // 리사이클러뷰에 CustomAdapter 객체 지정.
-        mAdapter = new CustomAdapter(this ,mArrayList) ;
-        recyclerView.setAdapter(mAdapter) ;
-
-        pref_Logined = getSharedPreferences("Logined", MODE_PRIVATE);
-        pref_Color = getSharedPreferences("Color" + pref_Logined.getString("ID", ""), MODE_PRIVATE);
+        buttonInsert = findViewById(R.id.history_add);
+        delete = findViewById(R.id.history_delete);
 
         pink = findViewById(R.id.main_tv1);
         orange = findViewById(R.id.main_tv2);
@@ -93,26 +68,25 @@ public class History extends AppCompatActivity {
         blue = findViewById(R.id.main_tv4);
         purple = findViewById(R.id.main_tv5);
 
-        pink.setText(pref_Color.getString("PINK", "자습"));
-        orange.setText(pref_Color.getString("ORANGE", "수업"));
-        green.setText(pref_Color.getString("GREEN", "개인업무"));
-        blue.setText(pref_Color.getString("BLUE", "자기계발"));
-        purple.setText(pref_Color.getString("PURPLE", "네트워킹"));
+        pink.setText(pref.getString("PINK", "자습"));
+        orange.setText(pref.getString("ORANGE", "수업"));
+        green.setText(pref.getString("GREEN", "개인업무"));
+        blue.setText(pref.getString("BLUE", "자기계발"));
+        purple.setText(pref.getString("PURPLE", "네트워킹"));
 
-
-
-        Button buttonInsert = findViewById(R.id.history_add);
+        // 추가 버튼
         buttonInsert.setOnClickListener(new View.OnClickListener() {
             // 1. 화면 아래쪽에 있는 데이터 추가 버튼을 클릭하면
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(History.this, AddOrEdit.class);
-                intent.putExtra("Type","ADD");
+                intent.putExtra("Type", "ADD");
                 startActivity(intent);
             }
         });
 
-        Button delete = findViewById(R.id.history_delete);
+
+        // 저장된 데이터 모두 제거
         delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -121,16 +95,22 @@ public class History extends AppCompatActivity {
             }
         });
 
+        // 리사이클러뷰에 표시할 데이터 리스트 가져오기
+        mArrayList = getGsonPref();
+        Log.v("값 체크", "History에서의 사이즈 : " + mArrayList.size());
 
+        // 리사이클러뷰에 LinearLayoutManager 객체 지정.
+        recyclerView = findViewById(R.id.recycler1);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        // 리사이클러뷰에 CustomAdapter 객체 지정.
+        mAdapter = new CustomAdapter(this, mArrayList);
+        recyclerView.setAdapter(mAdapter);
 
     }
 
     private ArrayList<Color> getGsonPref() {
-        SharedPreferences pref = getSharedPreferences("Logined",MODE_PRIVATE);
-        String id  = pref.getString("ID","");
-        Log.v("값 체크","getGsonPref_로그인된 아이디 : "+id);
-        SharedPreferences prefs = getSharedPreferences("History",MODE_PRIVATE);
-        String json = prefs.getString(id, null);
+        String json = pref.getString("History", null);
         Gson gson = new Gson();
 
         ArrayList<Color> urls = new ArrayList<>();
@@ -150,17 +130,13 @@ public class History extends AppCompatActivity {
     }
 
     private void setGsonPref(ArrayList<Color> classes) {
-        SharedPreferences pref = getSharedPreferences("Logined",MODE_PRIVATE);
-        String id  = pref.getString("ID","");
-        Log.v("값 체크","setGsonPref_로그인된 아이디 : "+id);
-        SharedPreferences prefs = getSharedPreferences("History", MODE_PRIVATE);
-        SharedPreferences.Editor editor = prefs.edit();
+        SharedPreferences.Editor editor = pref.edit();
         Gson gson = new Gson();
         if (!classes.isEmpty()) {
-            editor.putString(id, gson.toJson(classes));
-            Log.v("값 체크",gson.toJson(classes));
+            editor.putString("History", gson.toJson(classes));
+            Log.v("값 체크", gson.toJson(classes));
         } else {
-            editor.putString(id, null);
+            editor.putString("History", null);
         }
         editor.commit();
     }

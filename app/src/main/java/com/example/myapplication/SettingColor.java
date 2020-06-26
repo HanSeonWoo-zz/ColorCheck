@@ -13,7 +13,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
 public class SettingColor extends AppCompatActivity {
-
+    SharedPreferences pref;
     Button correct;
     EditText et_pink;
     EditText et_orange;
@@ -23,14 +23,13 @@ public class SettingColor extends AppCompatActivity {
 
     InputMethodManager imm;
     ConstraintLayout constraintLayout;
-    SharedPreferences pref_Logined;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting_color);
-        pref_Logined = getSharedPreferences("Logined",MODE_PRIVATE);
+
+        pref = getSharedPreferences("1", MODE_PRIVATE);
 
         // 뷰 매칭
         correct = findViewById(R.id.color_bt_correct);
@@ -41,13 +40,13 @@ public class SettingColor extends AppCompatActivity {
         et_purple = findViewById(R.id.text_purple);
 
         // 수정된 버전 세팅
-        SharedPreferences pref = getSharedPreferences("Color"+pref_Logined.getString("ID",""), MODE_PRIVATE);
         et_pink.setText(pref.getString("PINK","자습"));
         et_orange.setText(pref.getString("ORANGE","수업"));
         et_green.setText(pref.getString("GREEN","개인업무"));
         et_blue.setText(pref.getString("BLUE","자기계발"));
         et_purple.setText(pref.getString("PURPLE","네트워킹"));
 
+        // 키보드 내려가게 하기 위한 셋팅
         imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         constraintLayout = findViewById(R.id.signup_Layout);
         constraintLayout.setOnClickListener(myClickListener);
@@ -57,7 +56,6 @@ public class SettingColor extends AppCompatActivity {
         correct.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                SharedPreferences pref = getSharedPreferences("Color"+pref_Logined.getString("ID",""), MODE_PRIVATE);
                 SharedPreferences.Editor editor = pref.edit();
                 editor.putString("PINK", et_pink.getText().toString());
                 editor.putString("ORANGE", et_orange.getText().toString());
@@ -71,6 +69,7 @@ public class SettingColor extends AppCompatActivity {
         });
     }
 
+    // 배경 클릭 시 키보드 내려가는 기능
     View.OnClickListener myClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {

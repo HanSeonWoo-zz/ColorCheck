@@ -15,12 +15,8 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 public class History_passwordCheck extends AppCompatActivity {
-
+    SharedPreferences pref;
     EditText et;
-    SharedPreferences pref_subPassword;
-    SharedPreferences pref_Logined;
-    String id;
-    String subPassword;
 
     Handler mHandler = new Handler();
     InputMethodManager imm;
@@ -31,11 +27,9 @@ public class History_passwordCheck extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_history_password_check);
 
+        pref = getSharedPreferences("1", MODE_PRIVATE);
+
         et = findViewById(R.id.history_password_et);
-        pref_subPassword = getSharedPreferences("subPassword", MODE_PRIVATE);
-        pref_Logined = getSharedPreferences("Logined", MODE_PRIVATE);
-        id = pref_Logined.getString("ID","");
-        subPassword= pref_subPassword.getString(id,"");
 
         // 키보드 올리기 (바로 올리면 안 떠서 딜레이를 주고 올림)
         mHandler.postDelayed(new Runnable() {
@@ -54,7 +48,6 @@ public class History_passwordCheck extends AppCompatActivity {
         et.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
             }
 
             @Override
@@ -63,21 +56,17 @@ public class History_passwordCheck extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                if(et.getText().toString().length()==4){
+                if (et.getText().toString().length() == 4) {
                     //키보드 내리기
                     immhide.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
-                    if(et.getText().toString().contentEquals(subPassword)){
+                    if (et.getText().toString().contentEquals(pref.getString("subPassword", ""))) {
                         Intent intent = new Intent(getApplicationContext(), History.class);
                         startActivity(intent);
                         finish();
-                    }
-                    else{
+                    } else {
                         Toast.makeText(getApplicationContext(), "비밀번호가 일치하지 않습니다.", Toast.LENGTH_SHORT).show();
                     }
-
                 }
-
-
             }
         });
     }

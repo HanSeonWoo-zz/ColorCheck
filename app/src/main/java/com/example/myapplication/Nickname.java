@@ -15,12 +15,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
 public class Nickname extends AppCompatActivity {
-
+    SharedPreferences pref;
     Button button;
     EditText et;
-    SharedPreferences pref_Logined;
-    SharedPreferences pref_Nickname;
-    SharedPreferences.Editor editor_Nickname;
     TextView tv_skip;
     ConstraintLayout nickname_layout;
 
@@ -31,13 +28,10 @@ public class Nickname extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_nickname);
 
+        pref = getSharedPreferences("1", MODE_PRIVATE);
         button = findViewById(R.id.nickname_bt);
         et = findViewById(R.id.nickname_et);
-        pref_Logined = getSharedPreferences("Logined", MODE_PRIVATE);
-        pref_Nickname = getSharedPreferences("Nickname", MODE_PRIVATE);
-        editor_Nickname = pref_Nickname.edit();
-        nickname_layout=findViewById(R.id.nickname_layout);
-
+        nickname_layout = findViewById(R.id.nickname_layout);
         tv_skip = findViewById(R.id.nickname_skip);
         imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 
@@ -45,7 +39,7 @@ public class Nickname extends AppCompatActivity {
         tv_skip.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.v("위치 체크","Nickname_SKIP");
+                Log.v("위치 체크", "Nickname_SKIP");
                 Intent intent = new Intent(getApplicationContext(), Main.class);
                 startActivity(intent);
                 finish();
@@ -57,42 +51,27 @@ public class Nickname extends AppCompatActivity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                if(pref_Logined.getString("ID","").contentEquals("")){
-                    Log.v("값체크","Nickname : Logined정보가 안넘어 왔어");
-                }
-                else{
-                    editor_Nickname.putString(pref_Logined.getString("ID",""), et.getText().toString());
-                    editor_Nickname.commit();
-                    Intent intent = new Intent(getApplicationContext(), Main.class);
-                    startActivity(intent);
-                    finish();
-                }
-
-
-
+                SharedPreferences.Editor editor = pref.edit();
+                editor.putString("Nickname", et.getText().toString());
+                editor.commit();
+                Intent intent = new Intent(getApplicationContext(), Main.class);
+                startActivity(intent);
+                finish();
             }
         });
 
         // 클릭 시 키보드 가리는 것
         nickname_layout.setOnClickListener(myClickListener);
-        //tv_skip.setOnClickListener(myClickListener);
-
-
-
     }
 
-    View.OnClickListener myClickListener = new View.OnClickListener()
-    {
+    View.OnClickListener myClickListener = new View.OnClickListener() {
         @Override
-        public void onClick(View v)
-        {
+        public void onClick(View v) {
             hideKeyboard();
         }
     };
 
-    private void hideKeyboard()
-    {
+    private void hideKeyboard() {
         imm.hideSoftInputFromWindow(et.getWindowToken(), 0);
     }
 }

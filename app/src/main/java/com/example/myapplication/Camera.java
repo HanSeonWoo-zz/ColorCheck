@@ -16,7 +16,6 @@ import android.os.Handler;
 import android.os.Message;
 import android.provider.MediaStore;
 import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -46,13 +45,18 @@ import java.util.Locale;
 import java.util.TreeSet;
 
 public class Camera extends AppCompatActivity {
+    SharedPreferences pref;
     private static final int IMAGE_FINISH = 1;
     private static final int COLORCHECK_FINISH = 2;
+    private static final int REQUEST_TAKE_PHOTO = 1;
+    private static final int REQUEST_INPUT_DATE = 2;
+
     final String TAG = getClass().getSimpleName();
-    static final int REQUEST_TAKE_PHOTO = 1;
-    static final int REQUEST_INPUT_DATE = 2;
+
     String mCurrentPhotoPath;
 
+    // 이미지 클릭 시 근처 영역에 같은 색을 찾는데
+    // 그 때의 가로 세로
     final static int WIDTH = 50;
     final static int HEIGHT = 50;
 
@@ -92,29 +96,6 @@ public class Camera extends AppCompatActivity {
 
     ProgressBar Bar;
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-        Log.v("위치체크", "Camera_onPause");
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        Log.v("위치체크", "Camera_onDestroy");
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        Log.v("위치체크", "Camera_onStart");
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        Log.v("위치체크", "Camera_onResume");
-    }
 
     @SuppressLint("HandlerLeak")
     Handler handler = new Handler() {
@@ -122,18 +103,20 @@ public class Camera extends AppCompatActivity {
         public void handleMessage(Message msg) {
 
             switch (msg.what) {
+                // 카메라 촬영 후 이미지 처리 완료 일때,
+                // 버튼, 이미지는 아직 안 보이고
+                // 로딩창을 띄워준다.
                 case IMAGE_FINISH:
-                    Log.v("위치 체크", "handler_IMAGE_FINISH에 들어옴");
                     colorcheck.start();
-                    Log.v("위치 체크", "handler_ColorCheck().start() 아래");
-
                     Bar.setVisibility(View.VISIBLE);
                     save.setVisibility(View.INVISIBLE);
                     re.setVisibility(View.INVISIBLE);
                     break;
 
+                // 이미지 처리가 완료
+                // 버튼 이미지 보인다.
+                // 로딩창 안 보인다.
                 case COLORCHECK_FINISH:
-                    Log.v("위치 체크", "handler _ COLORCHECK_FINISH");
                     imageView.setImageBitmap(coloredBitmap);
                     Bar.setVisibility(View.INVISIBLE);
                     save.setVisibility(View.VISIBLE);
@@ -149,9 +132,13 @@ public class Camera extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_camera);
         Log.v("위치체크", "OnCreate");
+        pref = getSharedPreferences("1", MODE_PRIVATE);
 
+        // 매칭 / save : 저장 버튼 / Bar : 프로그레스바 / re : 다시찍기 버튼 / imageView : 카메라 촬영한 이미지
         save = findViewById(R.id.Camera_save);
         Bar = findViewById(R.id.progressBar);
+        re = findViewById(R.id.Camera_re);
+        imageView = findViewById(R.id.Camera_iv_image);
 
         // 6.0 마쉬멜로우 이상일 경우에는 권한 체크 후 권한 요청
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -165,26 +152,38 @@ public class Camera extends AppCompatActivity {
         // 사진 찍기
         dispatchTakePictureIntent();
 
-        re = findViewById(R.id.Camera_re);
+
+        // 다시 찍기 버튼 / Main으로 나갔다가 다시 Camera로 들어온다.
         re.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                    setResult(RESULT_FIRST_USER);
-                    finish();
+                setResult(RESULT_FIRST_USER);
+                finish();
             }
         });
 
         // 저장 버튼 // 클릭 시 데이터를 Shared Preference에 저장한다.
         save.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
+                // 날짜의 덧셈 뺄셈이 필요해서 Calendar 씀.
                 Calendar cal = Calendar.getInstance();
+                // 날짜 형식
                 SimpleDateFormat format = new SimpleDateFormat("yyyy년 MM월 dd일 E", Locale.KOREA);
+
                 try {
+                    // 불러온 날짜를 Date형식으로 parse
                     Date date = format.parse(DateInput_date);
                     mData = getGsonPref();
+
+                    // sData는 카메라에서 촬영한 후의 데이터이다.
+                    // 월화수 3개의 데이터인 경우 | 목금토일 4개의 데이터인 경우 2가지가 있다.
+                    // DateInput_date는 첫날(월or목)의 날짜라서 반복문으로 월화수 or 목금토일의 날짜를 확인하는 작업
                     for (int i = 0; i < sData.size(); i++) {
                         cal.setTime(date);
                         cal.add(Calendar.DATE, i);
                         sData.get(i).setDate(format.format(cal.getTime()));
+
+                        // 받아오는 날짜의 데이터가 (mData에)이미 존재하는 경우
+                        // 삭제한다. (같은 날짜 중복 데이터 허용하지 않는다.)
                         for (int j = 0; j < mData.size(); j++) {
                             if (mData.get(j).getDate().contentEquals(format.format(cal.getTime()))) {
                                 mData.remove(j);
@@ -193,6 +192,8 @@ public class Camera extends AppCompatActivity {
                         }
 
                     }
+
+                    // 현재 카메라 촬영 데이터(sData)를 전체 데이터(mData)에 저장.
                     mData.addAll(sData);
                     setGsonPref(mData);
                     setResult(RESULT_OK);
@@ -206,65 +207,58 @@ public class Camera extends AppCompatActivity {
             }
         });
 
-        imageView = findViewById(R.id.Camera_iv_image);
-        imageView.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                float width_ratio;
-                float height_ratio;
 
-                // Bitmap을 복사
-                coloredBitmap = rotatedBitmap.copy(Bitmap.Config.ARGB_8888, true);
-//                Log.v("값 체크", "픽셀의 Width : " + rotatedBitmap.getWidth());
-//                Log.v("값 체크", "픽셀의 Height : " + rotatedBitmap.getHeight());
-//                Log.v("값 체크", "이미지뷰의 Width : " + imageView.getWidth());
-//                Log.v("값 체크", "이미지뷰의 Height : " + imageView.getHeight());
-                // 세로 모드
-                if (coloredBitmap.getWidth() < coloredBitmap.getHeight()) {
-                    width_ratio = (float) coloredBitmap.getWidth() / (float) imageView.getWidth();
-                    height_ratio = (float) coloredBitmap.getHeight() / (float) imageView.getHeight();
-                    Log.v("값 체크", " 세로 모드");
-                }
-                // 가로 모드
-                else {
-                    width_ratio = (float) coloredBitmap.getWidth() / (float) imageView.getWidth();
-                    height_ratio = (float) coloredBitmap.getHeight() / (float) imageView.getHeight();
-                    Log.v("값 체크", " 가로 모드");
-                }
+        // 이미지를 터치할 때, 터치한 위치의 색상과 같은 주변의 색상을 빨간색으로 만들어준다.
+        // 처음에 색상값 확인을 위해서 만든 코드인데,
+        // 나중에 유저 커스텀 색상을 설정할 때 다시 쓰기 위해서 주석 처리 보관
 
-                // User가 클릭한 위치(휴대폰에서의 X,Y좌표)를 받아와서 Bitmap 크기에 맞춘 값으로 계산
-                curX = (int) (event.getX() * width_ratio); // 실제 픽셀과의 비율을 계산
-                curY = (int) (event.getY() * height_ratio);
-
-                Log.v("값 체크", "가로비율 : " + width_ratio + " 세로비율 : " + height_ratio);
-
-                color = coloredBitmap.getPixel(curX, curY);
-                Color.RGBToHSV((color >> 16) & 0xFF, (color >> 8) & 0xFF, (color) & 0xFF, hsv);
-
-                // 클릭 지점의 주변 범위에 같은 색상값인 경우 -> 빨간색으로 변경
-                for (int j = -WIDTH; j < WIDTH; j++) {
-                    for (int i = -HEIGHT; i < HEIGHT; i++) {
-                        if (curX + i < coloredBitmap.getWidth() && curY + j < coloredBitmap.getHeight()) {
-
-                            color_pos = coloredBitmap.getPixel(curX + i, curY + j);
-                            Color.RGBToHSV((color_pos >> 16) & 0xFF, (color_pos >> 8) & 0xFF, (color_pos) & 0xFF, hsv_pos);
-
-                            if (hsv[0] - hsv_pos[0] > -Threshold && hsv[0] - hsv_pos[0] < Threshold) {
-                                coloredBitmap.setPixel(curX + i, curY + j, 0xFFFF0000);
-                                Log.v("값체크", "X : " + (curX + i) + " Y : " + (curY + j) +
-                                        " // HSV : " + hsv_pos[0] + "(" + hsv[0] + ") " +
-                                        hsv_pos[1] + "(" + hsv[1] + ") " +
-                                        hsv_pos[2] + "(" + hsv[2] + ")");
-                            }
-                        }
-                    }
-                }
-
-                imageView.setImageBitmap(coloredBitmap);
-
-                return false;
-            }
-        });
+//        imageView.setOnTouchListener(new View.OnTouchListener() {
+//            @Override
+//            public boolean onTouch(View v, MotionEvent event) {
+//                float width_ratio;
+//                float height_ratio;
+//
+//                // Bitmap을 복사 / 그대로 복사 / 축소 복사
+//                coloredBitmap = rotatedBitmap.copy(Bitmap.Config.ARGB_8888, true);
+//                coloredBitmap = Bitmap.createScaledBitmap(rotatedBitmap, rotatedBitmap.getWidth() / 4, rotatedBitmap.getHeight() / 4, true);
+//
+//                // 이미지뷰와 픽셀 크기 차이 비율
+//                width_ratio = (float) coloredBitmap.getWidth() / (float) imageView.getWidth();
+//                height_ratio = (float) coloredBitmap.getHeight() / (float) imageView.getHeight();
+//
+//                // User가 클릭한 위치(휴대폰에서의 X,Y좌표)를 받아와서 Bitmap 크기에 맞춘 값으로 계산
+//                curX = (int) (event.getX() * width_ratio); // 실제 픽셀과의 비율을 계산
+//                curY = (int) (event.getY() * height_ratio);
+//
+//                Log.v("값 체크", "가로비율 : " + width_ratio + " 세로비율 : " + height_ratio);
+//
+//                color = coloredBitmap.getPixel(curX, curY);
+//                Color.RGBToHSV((color >> 16) & 0xFF, (color >> 8) & 0xFF, (color) & 0xFF, hsv);
+//
+//                // 클릭 지점의 주변 범위에 같은 색상값인 경우 -> 빨간색으로 변경
+//                for (int j = -WIDTH; j < WIDTH; j++) {
+//                    for (int i = -HEIGHT; i < HEIGHT; i++) {
+//                        if (curX + i < coloredBitmap.getWidth() && curY + j < coloredBitmap.getHeight()) {
+//
+//                            color_pos = coloredBitmap.getPixel(curX + i, curY + j);
+//                            Color.RGBToHSV((color_pos >> 16) & 0xFF, (color_pos >> 8) & 0xFF, (color_pos) & 0xFF, hsv_pos);
+//
+//                            if (hsv[0] - hsv_pos[0] > -Threshold && hsv[0] - hsv_pos[0] < Threshold) {
+//                                coloredBitmap.setPixel(curX + i, curY + j, 0xFFFF0000);
+//                                Log.v("값체크", "X : " + (curX + i) + " Y : " + (curY + j) +
+//                                        " // HSV : " + hsv_pos[0] + "(" + hsv[0] + ") " +
+//                                        hsv_pos[1] + "(" + hsv[1] + ") " +
+//                                        hsv_pos[2] + "(" + hsv[2] + ")");
+//                            }
+//                        }
+//                    }
+//                }
+//
+//                imageView.setImageBitmap(coloredBitmap);
+//
+//                return false;
+//            }
+//        });
 
     }
 
@@ -278,33 +272,37 @@ public class Camera extends AppCompatActivity {
         }
     }
 
-    // 카메라로 촬영한 영상을 가져오는 부분
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
         super.onActivityResult(requestCode, resultCode, intent);
 
-        Log.v("위치 체크", "onActivityResult" + requestCode);
+        // 카메라 촬영 후
+        // 이미지 회전 시켜서 가져오는 작업 스레드로 진행 ( 백그라운드 )
+        // 회전 작업이 끝나면 컬러 처리 작업을 바로 진행할 예정
+        // 유저는 날짜 입력 액티비티 창으로 바로 넘어간다.
         if (requestCode == REQUEST_TAKE_PHOTO) {
             if (resultCode == RESULT_OK) {
                 new Thread_ImageProcess().start();
                 Intent intent_dateinput = new Intent(getApplicationContext(), DateInput.class);
                 startActivityForResult(intent_dateinput, REQUEST_INPUT_DATE);
-            }
-            else{
+            } else {
                 finish();
             }
-        } else if (requestCode == REQUEST_INPUT_DATE) {
-            if(resultCode == RESULT_OK) {
+        }
+
+        // 유저가 입력한 날짜를 저장한다.
+        else if (requestCode == REQUEST_INPUT_DATE) {
+            if (resultCode == RESULT_OK) {
                 DateInput_date = intent.getExtras().getString("date");
-                Log.v("위치 체크", "onActivityResult_REQUEST_INPUT_DATE" + requestCode);
-                Log.v("값체크", intent.getExtras().getString("date"));
-            }
-            else{
+            } else {
                 finish();
             }
         }
     }
 
+
+    // 이미지 회전시켜 가져오는 스레드
     public class Thread_ImageProcess extends Thread {
         @Override
         public void run() {
@@ -325,38 +323,34 @@ public class Camera extends AppCompatActivity {
                             ExifInterface.ORIENTATION_UNDEFINED);
 
                     rotatedBitmap = null;
-                    // 회전된 것을 다시 돌려온다.
+
+                    // 여러 방향으로 찍혀도 세로모드에 보기에 적합한 사진 형태로 나오게 했다.
+                    // 주석은 나중에 가로모드 적용 시 바꿔야 해서 지우지 않았다.
                     switch (orientation) {
-
-                        // 가로로 찍혀도 세로로 나올 수 있게 angle을 조정했다.
-                        case ExifInterface.ORIENTATION_ROTATE_90:
-                            Log.v("위치 체크","90");
-                            rotatedBitmap = rotateImage(bitmap, 90);
-                            break;
-
-                        case ExifInterface.ORIENTATION_ROTATE_180:
-                            Log.v("위치 체크","180");
-                            rotatedBitmap = rotateImage(bitmap, 90);
-                            break;
-
-                        case ExifInterface.ORIENTATION_ROTATE_270:
-                            Log.v("위치 체크","270");
-                            rotatedBitmap = rotateImage(bitmap, 90);
-                            break;
+//                        case ExifInterface.ORIENTATION_ROTATE_90:
+//                            rotatedBitmap = rotateImage(bitmap, 90);
+//                            break;
+//
+//                        case ExifInterface.ORIENTATION_ROTATE_180:
+//                            rotatedBitmap = rotateImage(bitmap, 90);
+//                            break;
+//
+//                        case ExifInterface.ORIENTATION_ROTATE_270:
+//                            rotatedBitmap = rotateImage(bitmap, 90);
+//                            break;
 
                         case ExifInterface.ORIENTATION_NORMAL:
                         default:
-                            Log.v("위치 체크","0");
                             rotatedBitmap = rotateImage(bitmap, 90);
-                            //rotatedBitmap = bitmap;
                     }
-                    coloredBitmap = Bitmap.createScaledBitmap(rotatedBitmap, rotatedBitmap.getWidth() / 4, rotatedBitmap.getHeight() / 4, true);
-                    Log.v("위치 체크", "onActivityResult_이미지 처리 완료 _ coloredBitmap 생성");
 
+                    // 사진 픽셀이 커서 줄여서 복사
+                    coloredBitmap = Bitmap.createScaledBitmap(rotatedBitmap, rotatedBitmap.getWidth() / 4, rotatedBitmap.getHeight() / 4, true);
+
+                    // 이미지 회전 처리 끝났다고 핸들러에 메시지를 보낸다.
                     Message message = handler.obtainMessage();
                     message.what = IMAGE_FINISH;
                     handler.sendMessage(message);
-                    Log.v("위치 체크", "onActivityResult_handler로 IMAGE_FINISH메시지 보냄");
                 }
             } catch (Exception e) {
 
@@ -366,12 +360,12 @@ public class Camera extends AppCompatActivity {
     }
 
     private File createImageFile() throws IOException {
-        // Create an image file name
+        // 이미지파일의 이름을 만든다. 중복이 안되기 위해 시간값 활용
         // new Date()는 현재 날짜와 시간을 가지는 인스턴스를 반환한다.
         @SuppressLint("SimpleDateFormat") String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         String imageFileName = "JPEG_" + timeStamp + "_";
 
-        // 외부 저장소 중에 특정 데이터를 저장하는 영역 //
+        // 외부 저장소에 특정 형식을 저장하는 영역이 있다. //
         // DIRECTORY_PICTIURES 는 사진 // 그외에도 ARARMS / DCIM / DOWNLOADS / MUSIC / NITIFICATIONS / PODCASTS / MOVIES가 있음.
         File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
         File image = File.createTempFile(
@@ -380,27 +374,24 @@ public class Camera extends AppCompatActivity {
                 storageDir      /* directory */
         );
 
-        // Save a file: path for use with ACTION_VIEW intents
+        // 파일 Path
         mCurrentPhotoPath = image.getAbsolutePath();
         return image;
     }
 
     private void dispatchTakePictureIntent() {
-        Log.v("위치 체크", "카메라 인텐트 부르는 메소드");
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        // Ensure that there's a camera activity to handle the intent
+
         if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-            // Create the File where the photo should go
             File photoFile = null;
             try {
                 // createImageFile()은 외부 저장소 DIRECTORY_PICTURES 위치에
                 // 파일이름형식.jpg 인 image File을 return 한다.
-
                 photoFile = createImageFile();
             } catch (IOException ex) {
-                // Error occurred while creating the File
             }
-            // Continue only if the File was successfully created
+
+            // createImageFIle()이 잘 작동했을 때 실행.
             if (photoFile != null) {
                 Uri photoURI = FileProvider.getUriForFile(this,
                         "com.example.myapplication.fileprovider",
@@ -408,14 +399,14 @@ public class Camera extends AppCompatActivity {
 
                 // 촬영한 사진을 섬네일 뿐 아닌, 풀사이즈를 받기 위해서
                 // MediaStore.EXTRA_OUTPUT 를 설정하고 URI를 보내준다
-                // The name of the Intent-extra used to indicate a content resolver Uri to be used to store the requested image or video.
+                // 원문 : The name of the Intent-extra used to indicate a content resolver Uri to be used to store the requested image or video.
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
                 startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
-                Log.v("위치 체크", "카메라 인텐트 부른 이후");
             }
         }
     }
 
+    // 이미지 회전 메소드
     public static Bitmap rotateImage(Bitmap source, float angle) {
         Matrix matrix = new Matrix();
         matrix.postRotate(angle);
@@ -424,6 +415,7 @@ public class Camera extends AppCompatActivity {
     }
 
 
+    // 촬영한 이미지 색상 처리 메소드
     private class ColorCheck implements Runnable {
 
         @Override
@@ -431,65 +423,64 @@ public class Camera extends AppCompatActivity {
             int i, j;
             int count;
 
+            // 색상 인식한 이미지의 픽셀 위치를 true로 갖는 2차원 boolean배열
+            // Ex) 핑크색을 인식한 위치를 true로 갖는 bool_pink
             boolean[][] bool_pink = new boolean[coloredBitmap.getWidth()][coloredBitmap.getHeight()];
             boolean[][] bool_orange = new boolean[coloredBitmap.getWidth()][coloredBitmap.getHeight()];
             boolean[][] bool_green = new boolean[coloredBitmap.getWidth()][coloredBitmap.getHeight()];
             boolean[][] bool_blue = new boolean[coloredBitmap.getWidth()][coloredBitmap.getHeight()];
             boolean[][] bool_purple = new boolean[coloredBitmap.getWidth()][coloredBitmap.getHeight()];
 
+            // 전체 이미지를 스캔 / y축은 상단 25%정도는 쓰지 않아서 시간 단축을 위해서 안 본다.
             for (i = 0; i < coloredBitmap.getWidth(); i++) {
-                for (j = coloredBitmap.getHeight() / 4 ; j < coloredBitmap.getHeight(); j++) {
+                for (j = coloredBitmap.getHeight() / 4; j < coloredBitmap.getHeight(); j++) {
 
                     // 픽셀의 RGB -> HSV
                     color_pos = coloredBitmap.getPixel(i, j);
                     Color.RGBToHSV((color_pos >> 16) & 0xFF, (color_pos >> 8) & 0xFF, (color_pos) & 0xFF, hsv_pos);
 
-                    // 찾는 COLOR의 조건이면 해당 픽셀을 빨간색으로 바꾼다.
-                    // 2차원 boolean 배열에 저장한다.
+                    // HSV 적절한 범위의 값을 찾으면 2차원 boolean 배열에 저장한다.
                     if (hsv_pos[0] - PINK > -Threshold && hsv_pos[0] - PINK < Threshold &&
                             hsv_pos[1] > SATURATION &&
                             hsv_pos[2] > VALUE) {
-                       // coloredBitmap.setPixel(i, j, 0xFFFF0000);
                         bool_pink[i][j] = true;
                     } else if (hsv_pos[0] - ORANGE > -Threshold && hsv_pos[0] - ORANGE < Threshold &&
                             hsv_pos[1] > 0.5 &&
                             hsv_pos[2] > VALUE) {
-                      //  coloredBitmap.setPixel(i, j, 0xFFFF0000);
                         bool_orange[i][j] = true;
                     } else if (hsv_pos[0] - GREEN > -Threshold && hsv_pos[0] - GREEN < Threshold &&
                             hsv_pos[1] > SATURATION &&
                             hsv_pos[2] > VALUE) {
-                       // coloredBitmap.setPixel(i, j, 0xFFFF0000);
                         bool_green[i][j] = true;
                     } else if (hsv_pos[0] - BLUE > -Threshold && hsv_pos[0] - BLUE < Threshold &&
                             hsv_pos[1] > SATURATION &&
                             hsv_pos[2] > VALUE) {
-                       // coloredBitmap.setPixel(i, j, 0xFFFF0000);
                         bool_blue[i][j] = true;
                     } else if (hsv_pos[0] - PURPLE > -Threshold && hsv_pos[0] - PURPLE < Threshold &&
                             hsv_pos[1] > 0.1 &&
                             hsv_pos[2] > VALUE) {
-                       // coloredBitmap.setPixel(i, j, 0xFFFF0000);
                         bool_purple[i][j] = true;
                     }
 
                 }
             }
 
+            // 가로줄을 없애는 메소드
             FilterRow(bool_pink);
             FilterRow(bool_orange);
             FilterRow(bool_green);
             FilterRow(bool_blue);
             FilterRow(bool_purple);
 
+            // 세로줄을 없애는 메소드
             FilterColumn(bool_pink);
             FilterColumn(bool_orange);
             FilterColumn(bool_green);
             FilterColumn(bool_blue);
             FilterColumn(bool_purple);
 
-            // 2차원 boolean배열에서 y축이 모두 false인 부분이면 arrayList에서 빼려고 함.
-            // CheckX : 해당하는 X값의 모든 Y값이 원하는 COLOR가 아닌 경우 false
+            // 2차원 boolean배열에서 유의미한 X값만 저장하려고 함.
+            // 유의미하다 : 해당 X값에서 true값이 있다.
             boolean[] CheckX_pink = new boolean[coloredBitmap.getWidth()];
             boolean[] CheckX_orange = new boolean[coloredBitmap.getWidth()];
             boolean[] CheckX_green = new boolean[coloredBitmap.getWidth()];
@@ -497,45 +488,37 @@ public class Camera extends AppCompatActivity {
             boolean[] CheckX_purple = new boolean[coloredBitmap.getWidth()];
 
             for (i = 0; i < coloredBitmap.getWidth(); i++) {
-                int count_pink = 0;
-                int count_orange = 0;
-                int count_green = 0;
-                int count_blue = 0;
-                int count_purple = 0;
-
-                for (j = coloredBitmap.getHeight() / 4 ; j < coloredBitmap.getHeight(); j++) {
+                for (j = coloredBitmap.getHeight() / 4; j < coloredBitmap.getHeight(); j++) {
                     if (bool_pink[i][j]) {
-                        count_pink++;
+                        CheckX_pink[i] = true;
                     }
                     if (bool_orange[i][j]) {
-                        count_orange++;
+                        CheckX_orange[i] = true;
                     }
                     if (bool_green[i][j]) {
-                        count_green++;
+                        CheckX_green[i] = true;
                     }
                     if (bool_blue[i][j]) {
-                        count_blue++;
+                        CheckX_blue[i] = true;
                     }
                     if (bool_purple[i][j]) {
-                        count_purple++;
+                        CheckX_purple[i] = true;
+                    }
+
+                    if (CheckX_pink[i] && CheckX_orange[i] && CheckX_green[i] && CheckX_blue[i] && CheckX_purple[i]) {
+                        break;
                     }
                 }
-                CheckX_pink[i] = count_pink != 0;
-                CheckX_orange[i] = count_orange != 0;
-                CheckX_green[i] = count_green != 0;
-                CheckX_blue[i] = count_blue != 0;
-                CheckX_purple[i] = count_purple != 0;
 
             }
 
-            //ArrayList<Integer> arrayList = new ArrayList<>();
+            // 유의미한 X위치를 저장할 ArrayList
             ArrayList<Integer> arrayList_pink = new ArrayList<>();
             ArrayList<Integer> arrayList_orange = new ArrayList<>();
             ArrayList<Integer> arrayList_green = new ArrayList<>();
             ArrayList<Integer> arrayList_blue = new ArrayList<>();
             ArrayList<Integer> arrayList_purple = new ArrayList<>();
 
-            // CheckX 를 토대로 arrayList를 만들어 준다.
             for (i = 0; i < coloredBitmap.getWidth(); i++) {
                 if (CheckX_pink[i]) {
                     arrayList_pink.add(i);
@@ -555,24 +538,29 @@ public class Camera extends AppCompatActivity {
             }
 
             // rectanglesDay : 요일 별로 나뉜 큰 사각형 덩어리의 리스트
+            // Ex) rectanglesDay_pink : 월 / 화 / 수 3개의 Rectangle값을 가진다.
+            // Rectangle은 좌표값을 모두 가진 TreeSet을 가지고 있다.
             ArrayList<Rectangle> rectanglesDay_pink = DayMaker(arrayList_pink, bool_pink);
             ArrayList<Rectangle> rectanglesDay_orange = DayMaker(arrayList_orange, bool_orange);
             ArrayList<Rectangle> rectanglesDay_green = DayMaker(arrayList_green, bool_green);
             ArrayList<Rectangle> rectanglesDay_blue = DayMaker(arrayList_blue, bool_blue);
             ArrayList<Rectangle> rectanglesDay_purple = DayMaker(arrayList_purple, bool_purple);
 
-
-            // 각 사각형 별로 나누는 작업
-            // rectangles : 하나의 COLOR CHECK 덩어리의 리스트
+            // 요일 별 -> 하나하나의 사각형 별로 나누는 작업
+            // rectangles : 하나의 COLOR CHECK 덩어리의 TreeSet
             ArrayList<Rectangle> rectangles_pink = RecMaker(rectanglesDay_pink, bool_pink);
             ArrayList<Rectangle> rectangles_orange = RecMaker(rectanglesDay_orange, bool_orange);
             ArrayList<Rectangle> rectangles_green = RecMaker(rectanglesDay_green, bool_green);
             ArrayList<Rectangle> rectangles_blue = RecMaker(rectanglesDay_blue, bool_blue);
             ArrayList<Rectangle> rectangles_purple = RecMaker(rectanglesDay_purple, bool_purple);
 
+            // 이미지 처리
+            // 색을 유저가 잘 볼 수 있게 찾는 색상을 동일하게 만들고
+            // 찾지 않는 배경은 투명도를 준다.
             for (i = 0; i < coloredBitmap.getWidth(); i++) {
                 for (j = 0; j < coloredBitmap.getHeight(); j++) {
-                    if(bool_pink[i][j] || bool_orange[i][j] || bool_green[i][j] || bool_blue[i][j] || bool_purple[i][j]) {
+                    // 찾는 Color영역의 색을 동일하게 설정한다.
+                    if (bool_pink[i][j] || bool_orange[i][j] || bool_green[i][j] || bool_blue[i][j] || bool_purple[i][j]) {
                         if (bool_pink[i][j]) {
                             coloredBitmap.setPixel(i, j, 0xFFFF3399);
                         }
@@ -588,14 +576,19 @@ public class Camera extends AppCompatActivity {
                         if (bool_purple[i][j]) {
                             coloredBitmap.setPixel(i, j, 0xFF800080);
                         }
-                    }
-                    else{
-                        // 찾는 COLOR영역이 아닌 부분은 ALPHA값 조절
-                        coloredBitmap.setPixel(i,j,coloredBitmap.getPixel(i,j)-0x66000000);
+                    } else {
+                        // 찾는 COLOR영역이 아닌 부분은 ALPHA값 조절해서 투명하게 만든다.
+                        coloredBitmap.setPixel(i, j, coloredBitmap.getPixel(i, j) - 0x66000000);
                     }
                 }
             }
 
+
+            // 각 색상 별 최종 데이터를 모두 합해서
+            // 색상 구별없는 종합 데이터를 만드는 중입니다.
+            // 요일 사이의 거리를 구해서 30분에 해당하는 픽셀을 구하기 위해서 입니다.
+
+            // 하나의 좌표 집합을 만든다.
             TreeSet<Coordinates> CoordiSet = new TreeSet<>();
             for (i = 0; i < rectangles_pink.size(); i++) {
                 CoordiSet.addAll(rectangles_pink.get(i).getCoordiSet());
@@ -612,7 +605,8 @@ public class Camera extends AppCompatActivity {
             for (i = 0; i < rectangles_purple.size(); i++) {
                 CoordiSet.addAll(rectangles_purple.get(i).getCoordiSet());
             }
-            Gson gson = new Gson();
+
+            // 하나씩 꺼내면서 2차원 boolean배열에 그린다.
             Iterator<Coordinates> iter = CoordiSet.iterator();
             boolean[][] last_bool = new boolean[coloredBitmap.getWidth()][coloredBitmap.getHeight()];
             while (iter.hasNext()) {
@@ -620,6 +614,7 @@ public class Camera extends AppCompatActivity {
                 last_bool[a.getX()][a.getY()] = true;
             }
 
+            // 유의미한 X좌표를 뽑아낸다.
             boolean[] last_CheckX = new boolean[coloredBitmap.getWidth()];
             for (i = 0; i < coloredBitmap.getWidth(); i++) {
                 count = 0;
@@ -631,6 +626,8 @@ public class Camera extends AppCompatActivity {
                 }
                 last_CheckX[i] = count != 0;
             }
+
+            // 유의미한 X좌표를 ArrayList에 저장한다.
             ArrayList<Integer> last_arrayList = new ArrayList<>();
             for (i = 0; i < coloredBitmap.getWidth(); i++) {
                 if (last_CheckX[i]) {
@@ -639,22 +636,27 @@ public class Camera extends AppCompatActivity {
             }
             ArrayList<Rectangle> last_rectanglesDay = DayMaker(last_arrayList, last_bool);
 
-            int distance = 15;
+            // 첫째날과 둘째날의 사이 거리를 저장한다.
+            int distance = 165;
             try {
                 distance = last_rectanglesDay.get(1).getAverX() - last_rectanglesDay.get(0).getAverX();
             } catch (Exception ignored) {
-
             }
+
             Log.v("값 체크", "last_rectanglesDay.size : " + last_rectanglesDay.size());
             for (i = 0; i < last_rectanglesDay.size(); i++) {
                 Log.v("값 체크", "rectanglesDay's " + i + "번째 X위치 " + last_rectanglesDay.get(i).getAverX());
             }
+
+            // 실제로 측정한 사이즈
+            // 30분 : 3mm / 요일 사이 거리 : 31.3mm
             double THIRTY_MIN = 3;
             double DAYS_DISTANCE = 31.3;
             // 30분에 해당하는 픽셀 거리 값
             double THIRTY_PIXEL = (double) distance * THIRTY_MIN / DAYS_DISTANCE;
-            //THIRTY_PIXEL = 15;
             Log.v("값 체크", "THIRTY_PIXEL : " + THIRTY_PIXEL);
+
+            // 높이와 30분 픽셀 값을 토대로 계산한 시간값이 저장될 변수
             double time;
 
             Log.v("값 체크", "rectangles_pink size : " + rectangles_pink.size());
@@ -691,6 +693,9 @@ public class Camera extends AppCompatActivity {
                 Log.v("값 체크", "rectangles_purple " + i + "'s 사이즈 : " + rectangles_purple.get(i).size() + " | 평균위치 : " + rectangles_purple.get(i).getAverX() + " " + rectangles_purple.get(i).getAverY()
                         + " | 높이 : " + rectangles_purple.get(i).getHeight() + " | 시간 : " + time);
             }
+
+            // 따로 따로 사각형 -> 요일별 색상 시간을 구하기
+            // double[0] pink_day는 첫째날의 핑크 색상 시간을 의미한다.
             double[] pink_day = new double[last_rectanglesDay.size()];
             double[] orange_day = new double[last_rectanglesDay.size()];
             double[] green_day = new double[last_rectanglesDay.size()];
@@ -698,6 +703,8 @@ public class Camera extends AppCompatActivity {
             double[] purple_day = new double[last_rectanglesDay.size()];
 
             for (i = 0; i < last_rectanglesDay.size(); i++) {
+                // i번째 요일의 위치를 나타내는 pos
+                // 그 근처에 있으면 i번째 색상 데이터에 저장한다.
                 int pos = last_rectanglesDay.get(i).getAverX();
                 pink_day[i] = 0;
                 orange_day[i] = 0;
@@ -705,6 +712,7 @@ public class Camera extends AppCompatActivity {
                 blue_day[i] = 0;
                 purple_day[i] = 0;
 
+                // 핑크 사각형 모두를 확인해서 X위치가 pos 근처이면 해당 요일이라고 판단해서 저장한다.
                 for (j = 0; j < rectangles_pink.size(); j++) {
                     if (rectangles_pink.get(j).getAverX() - pos > -30 && rectangles_pink.get(j).getAverX() - pos < 30) {
                         time = Math.round((double) rectangles_pink.get(j).getHeight() / THIRTY_PIXEL) * 0.5;
@@ -745,18 +753,21 @@ public class Camera extends AppCompatActivity {
             }
 
 
+            // 촬영한 후의 최종 데이터 정보를 sData에 저장한다!
             sData = new ArrayList<>();
             for (i = 0; i < last_rectanglesDay.size(); i++) {
                 sData.add(new com.example.myapplication.Color("", pink_day[i], orange_day[i], green_day[i], blue_day[i], purple_day[i]));
             }
 
+            // 이미지 처리가 끝났다고 핸들러로 전달
             Message message = handler.obtainMessage();
             message.what = COLORCHECK_FINISH;
             handler.sendMessage(message);
-            Log.v("위치 체크", "ColorCheck 마지막 _ handler로 COLORCHECK_FINISH 메시지 보냄");
-
         }
 
+        // Rectangle Maker라는 의미
+        // 요일 별로 나뉜 rectanglesDay에서
+        // 하나의 사각형으로 나눠주는 작업을 한다.
         private ArrayList<Rectangle> RecMaker(ArrayList<Rectangle> rectanglesDay, boolean[][] bool) {
             ArrayList<Rectangle> rectangles = new ArrayList<>();
             TreeSet<Coordinates> corDay;
@@ -767,7 +778,10 @@ public class Camera extends AppCompatActivity {
 
             for (int i = 0; i < rectanglesDay.size(); i++) {
                 corDay = rectanglesDay.get(i).getCoordiSet();
-
+                if(i!=0 && cor.size() > 100){
+                    rectangles.add(new Rectangle(cor));
+                }
+                cor = new TreeSet<>();
                 // 좌표를 하나씩 꺼내보면서 확인
                 // Coordinates 는 y축 오름차순 -> x축 오름차순 순으로 정렬되어 나옴.
                 for (Coordinates c : corDay) {
@@ -778,22 +792,20 @@ public class Camera extends AppCompatActivity {
                     }
 
                     // 일정 범위 이상 y값이 떨어져 있으면 다른 덩어리로 인식한다.
-                    if (Y - preY > 5 || Y - preY < 0) {
-                        //Log.v("값 체크", "언제 오는 거지? " + X + " " + Y);
+                    // 요일이 다른데,
+                    if ((Y - preY > 5 || Y - preY < 0)) {
 
                         // 100보다 작은 덩어리는 잘못 인식된 부분으로 여긴다.
                         if (cor.size() > 100) {
                             rectangles.add(new Rectangle(cor));
-                        }
-                        else{
-                            Log.v("값체크","RecMaker에서 size <100 인 경우");
-                            // boolean 배열에서 빼주고 싶음
+                        } else {
+                            // boolean 배열에서 제거해준다.
                             Iterator<Coordinates> iter = cor.iterator();
-                            while(iter.hasNext()){
+                            while (iter.hasNext()) {
                                 Coordinates cc = iter.next();
                                 int ccX = cc.getX();
                                 int ccY = cc.getY();
-                                bool[ccX][ccY]=false;
+                                bool[ccX][ccY] = false;
                             }
                         }
                         cor = new TreeSet<>();
@@ -893,11 +905,7 @@ public class Camera extends AppCompatActivity {
     }
 
     private ArrayList<com.example.myapplication.Color> getGsonPref() {
-        SharedPreferences pref = getSharedPreferences("Logined", MODE_PRIVATE);
-        String id = pref.getString("ID", "");
-        //Log.v("값 체크", "getGsonPref_로그인된 아이디 : " + id);
-        SharedPreferences prefs = getSharedPreferences("History", MODE_PRIVATE);
-        String json = prefs.getString(id, null);
+        String json = pref.getString("History", null);
         Gson gson = new Gson();
 
         ArrayList<com.example.myapplication.Color> urls = new ArrayList<>();
@@ -917,16 +925,12 @@ public class Camera extends AppCompatActivity {
     }
 
     private void setGsonPref(ArrayList<com.example.myapplication.Color> classes) {
-        SharedPreferences pref = getSharedPreferences("Logined", MODE_PRIVATE);
-        String id = pref.getString("ID", "");
-        //Log.v("값 체크", "setGsonPref_로그인된 아이디 : " + id);
-        SharedPreferences prefs = getSharedPreferences("History", MODE_PRIVATE);
-        SharedPreferences.Editor editor = prefs.edit();
+        SharedPreferences.Editor editor = pref.edit();
         Gson gson = new Gson();
         if (!classes.isEmpty()) {
-            editor.putString(id, gson.toJson(classes));
+            editor.putString("History", gson.toJson(classes));
         } else {
-            editor.putString(id, null);
+            editor.putString("History", null);
         }
         editor.apply();
     }

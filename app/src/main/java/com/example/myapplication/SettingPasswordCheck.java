@@ -14,48 +14,40 @@ import android.widget.EditText;
 import androidx.appcompat.app.AppCompatActivity;
 
 public class SettingPasswordCheck extends AppCompatActivity {
-
+    SharedPreferences pref;
     EditText passwordCheck;
     Intent intent;
     Handler mHandler = new Handler();
     InputMethodManager imm;
     InputMethodManager immhide;
-    SharedPreferences pref_Logined;
-    SharedPreferences pref_subPassword;
-    SharedPreferences pref_useSubPassword;
-    SharedPreferences.Editor editor_subPassword;
-    SharedPreferences.Editor editor_useSubPassword;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting_password_check);
 
-
+        pref = getSharedPreferences("1", MODE_PRIVATE);
         passwordCheck = findViewById(R.id.setting_passwordCheck_password);
+        // SettingPassword에서 입력한 비밀번호를 받아오기 위한 intent
         intent = getIntent();
-        pref_Logined = getSharedPreferences("Logined", MODE_PRIVATE);
-        pref_subPassword = getSharedPreferences("subPassword", MODE_PRIVATE);
-        pref_useSubPassword = getSharedPreferences("useSubPassword", MODE_PRIVATE);
-        editor_subPassword = pref_subPassword.edit();
-        editor_useSubPassword = pref_useSubPassword.edit();
 
-
+        // 200ms 후에 키보드를 올린다.
+        // 바로 올리려고 하니까, 화면이 아직 준비 안된 상태라서 키보드가 올라오지 않았다.
         mHandler.postDelayed(new Runnable() {
             public void run() {
                 imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                // 키보드 올리기
                 imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
             }
         }, 200);
+
+        // 입력창에 포커스 주기
         passwordCheck.requestFocus();
         immhide = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
-
-
 
         passwordCheck.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
             }
 
             @Override
@@ -65,16 +57,16 @@ public class SettingPasswordCheck extends AppCompatActivity {
             @Override
             public void afterTextChanged(Editable s) {
                 if(passwordCheck.getText().toString().length()==4){
-                    // 키보드 내리기
+                    // 4자리 비밀번호를 입력하면 키보드 내리기
                     immhide.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
 
+                    // 비밀번호 일치하면 SubPassword 저장하기
                    if(passwordCheck.getText().toString().contentEquals(intent.getExtras().getString("Password"))){
                        setResult(RESULT_OK);
-                       editor_subPassword.putString(pref_Logined.getString("ID",""),passwordCheck.getText().toString());
-                       editor_subPassword.commit();
-
-                       editor_useSubPassword.putBoolean(pref_Logined.getString("ID",""),true);
-                       editor_useSubPassword.commit();
+                       SharedPreferences.Editor editor = pref.edit();
+                       editor.putString("subPassword",passwordCheck.getText().toString());
+                       editor.putBoolean("useSubPassword",true);
+                       editor.commit();
                        finish();
                    }
                    else{

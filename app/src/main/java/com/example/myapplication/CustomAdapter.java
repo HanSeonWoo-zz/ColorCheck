@@ -69,11 +69,10 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
 
         @Override
         public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-            // 3. 컨텍스트 메뉴를 생성하고 메뉴 항목 선택시 호출되는 리스너를 등록해줍니다. ID 1001, 1002로 어떤 메뉴를 선택했는지 리스너에서 구분하게 됩니다.
+            // 3. 컨텍스트 메뉴를 생성하고 메뉴 항목 선택시 호출되는 리스너를 등록해줍니다.
+            // ID 1001, 1002로 어떤 메뉴를 선택했는지 리스너에서 구분하게 됩니다.
 
-            //MenuItem Edit = menu.add(Menu.NONE, 1001, 1, "삽입(위로)");
-            MenuItem Delete = menu.add(Menu.NONE, 1002, 2, "삭제");
-            //Edit.setOnMenuItemClickListener(onEditMenu);
+            MenuItem Delete = menu.add(Menu.NONE, 1001, 1, "삭제");
             Delete.setOnMenuItemClickListener(onEditMenu);
 
         }
@@ -118,43 +117,12 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
     // onBindViewHolder() - position에 해당하는 데이터를 뷰홀더의 아이템뷰에 표시.
     @Override
     public void onBindViewHolder(CustomAdapter.ViewHolder holder, int position) {
-
-//        holder.id.setTextSize(TypedValue.COMPLEX_UNIT_SP, 25);
-//        holder.english.setTextSize(TypedValue.COMPLEX_UNIT_SP, 25);
-//        holder.korean.setTextSize(TypedValue.COMPLEX_UNIT_SP, 25);
-//
-//        holder.id.setGravity(Gravity.CENTER);
-//        holder.english.setGravity(Gravity.CENTER);
-//        holder.korean.setGravity(Gravity.CENTER);
-
         holder.date.setText(mData.get(position).getDate());
         holder.pink.setText(mData.get(position).getPink());
         holder.orange.setText(mData.get(position).getOrange());
         holder.green.setText(mData.get(position).getGreen());
         holder.blue.setText(mData.get(position).getBlue());
         holder.purple.setText(mData.get(position).getPurple());
-
-//        holder.EndTime.setText(mData.get(position).getEndTime());
-//        //holder.color.setText(mData.get(position).getColor());
-//        if(mData.get(position).getColor().contentEquals("1")){
-//            holder.color.setBackgroundColor(0xFFFE2E9A);
-//        }
-//        else if(mData.get(position).getColor().contentEquals("2")){
-//            holder.color.setBackgroundColor(0xFFFF8000);
-//        }
-//        else if(mData.get(position).getColor().contentEquals("3")){
-//            holder.color.setBackgroundColor(0xFF1E8037);
-//        }
-//        else if(mData.get(position).getColor().contentEquals("4")){
-//            holder.color.setBackgroundColor(0xFF0000FF);
-//        }
-//        else if(mData.get(position).getColor().contentEquals("5")){
-//            holder.color.setBackgroundColor(0xFFA901DB);
-//        }
-//        else{
-//            holder.color.setBackgroundColor(0xFFFFFFFF);
-//        }
-
     }
 
     // getItemCount() - 전체 데이터 갯수 리턴.

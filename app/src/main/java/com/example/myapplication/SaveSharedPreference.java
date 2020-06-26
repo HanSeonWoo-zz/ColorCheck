@@ -15,6 +15,26 @@ PURPLE
 History
 PickedDate - 2020년 06월 22일 월
 
+////////완료 목록///////////////
+Main
+
+Camera
+DateInput
+
+History
+AddOrEdit
+CustomAdapter
+
+Setting
+SettingColor
+SettingNickname
+SettingPassword
+SettingPasswordCheck
+VerInfo
+Ask
+
+
+
     Logined
     "ID" 로그인된 아이디를 보여줌.
 

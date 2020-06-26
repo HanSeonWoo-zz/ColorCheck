@@ -21,7 +21,6 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.LineChart;
@@ -55,12 +54,7 @@ public class Main extends AppCompatActivity {
     public static final int REQUEST_CODE_SETTING = 101;
     public static final int REQUEST_CODE_CAMERA = 102;
     public static final int REQUEST_CODE_HISTORY = 103;
-    SharedPreferences pref_Logined = getSharedPreferences("Logined",MODE_PRIVATE);
-    String ID;
-    SharedPreferences pref_ID;
-    SharedPreferences pref_useSubPassword;
-    SharedPreferences pref_Nickname;
-    SharedPreferences pref_Color;
+    SharedPreferences pref;
 
     Spinner spinner;
     LineChart linechart;
@@ -75,13 +69,13 @@ public class Main extends AppCompatActivity {
     EditText PickedDate;
 
     Calendar myCalendar = Calendar.getInstance();
-
     DatePickerDialog.OnDateSetListener myDatePicker;
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        SharedPreferences.Editor editor = pref_ID.edit();
+        //Destroy 시 유저가 선택한 날짜 저장 -> 다시 실행 시 바로 보여주기.
+        SharedPreferences.Editor editor = pref.edit();
         editor.putString("PickedDate", PickedDate.getText().toString());
         editor.commit();
     }
@@ -89,10 +83,9 @@ public class Main extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-
+        // 데이터 업데이트
         SetLineChart();
         SetPieChart();
-
     }
 
     @Override
@@ -100,15 +93,14 @@ public class Main extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        pref_Logined = getSharedPreferences("Logined", MODE_PRIVATE);
-        ID = pref_Logined.getString("ID", "");
-        pref_useSubPassword = getSharedPreferences("useSubPassword", MODE_PRIVATE);
-        pref_Nickname = getSharedPreferences("Nickname", MODE_PRIVATE);
-        pref_Color = getSharedPreferences("Color" + pref_Logined.getString("ID", ""), MODE_PRIVATE);
-        pref_ID = getSharedPreferences(ID, MODE_PRIVATE);
-
+        pref = getSharedPreferences("1",MODE_PRIVATE);
         PickedDate = findViewById(R.id.Main_et_PickedDate);
-        PickedDate.setText(pref_ID.getString("PickedDate", "2020년 06월 15일 월"));
+        PickedDate.setText(pref.getString("PickedDate", "2020년 06월 15일 월"));
+
+        spinner = findViewById(R.id.spinner);
+        linechart = findViewById(R.id.LineChart);
+        piechart = findViewById(R.id.PieChart);
+        piechart.setVisibility(View.INVISIBLE);
 
         myDatePicker = new DatePickerDialog.OnDateSetListener() {
             @Override
@@ -128,8 +120,11 @@ public class Main extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable arg0) {
+                // 데이터 업데이트
                 SetLineChart();
                 SetPieChart();
+
+                // VISIBLE을 껐다가 켜주면 업데이트가 반영됨.
                 if (linechart.getVisibility() == View.INVISIBLE) {
                     linechart.setVisibility(View.VISIBLE);
                     linechart.setVisibility(View.INVISIBLE);
@@ -153,16 +148,17 @@ public class Main extends AppCompatActivity {
         screenshot.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.v("위치 체크", "Main_screenshot_onClick");
-                ConstraintLayout Layout = findViewById(R.id.Main_Layout);
-                LineChart linechartView = findViewById(R.id.LineChart); //캡쳐할 영역의 레이아웃
-                PieChart piechartView = findViewById(R.id.PieChart);
                 @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss"); //년,월,일,시간 포멧 설정
                 Date time = new Date(); //파일명 중복 방지를 위해 사용될 현재시간
                 String current_time = sdf.format(time); //String형 변수에 저장
-                Request_Capture(linechartView, current_time + "_LineChart"); //지정한 Layout 영역 사진첩 저장 요청
-                Request_Capture(piechartView, current_time + "_PieChart"); //지정한 Layout 영역 사진첩 저장 요청
-                Request_Capture(Layout, current_time + "_Layout"); //지정한 Layout 영역 사진첩 저장 요청
+
+                // 현재 보여지는 차트 저장하는 스크린샷
+                if (linechart.getVisibility() == View.VISIBLE) {
+                    Request_Capture(linechart, current_time + "_LineChart");
+                }
+                else{
+                    Request_Capture(piechart, current_time + "_PieChart");
+                }
                 Toast.makeText(getApplicationContext(), "캡처", Toast.LENGTH_SHORT).show();
             }
         });
@@ -200,7 +196,7 @@ public class Main extends AppCompatActivity {
         history.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (pref_useSubPassword.getBoolean(pref_Logined.getString("ID", ""), false)) {
+                if (pref.getBoolean("useSubPassword", false)) {
                     Intent intent = new Intent(getApplicationContext(), History_passwordCheck.class);
                     startActivity(intent);
                 } else {
@@ -210,12 +206,6 @@ public class Main extends AppCompatActivity {
 
             }
         });
-
-        spinner = findViewById(R.id.spinner);
-        linechart = findViewById(R.id.LineChart);
-        piechart = findViewById(R.id.PieChart);
-        piechart.setVisibility(View.INVISIBLE);
-
 
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -236,12 +226,10 @@ public class Main extends AppCompatActivity {
                 }
 
             }
-
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
             }
         });
-
 
     }
 
@@ -265,11 +253,7 @@ public class Main extends AppCompatActivity {
     }
 
     private ArrayList<com.example.myapplication.Color> getGsonPref() {
-        SharedPreferences pref = getSharedPreferences("Logined", MODE_PRIVATE);
-        String id = pref.getString("ID", "");
-        Log.v("값 체크", "getGsonPref_로그인된 아이디 : " + id);
-        SharedPreferences prefs = getSharedPreferences("History", MODE_PRIVATE);
-        String json = prefs.getString(id, null);
+        String json = pref.getString("History","");
         Gson gson = new Gson();
 
         ArrayList<com.example.myapplication.Color> urls = new ArrayList<>();
@@ -288,18 +272,14 @@ public class Main extends AppCompatActivity {
         return urls;
     }
 
-    private void setGsonPref(ArrayList<com.example.myapplication.Color> classes) throws JSONException {
-        SharedPreferences pref = getSharedPreferences("Logined", MODE_PRIVATE);
-        String id = pref.getString("ID", "");
-        Log.v("값 체크", "setGsonPref_로그인된 아이디 : " + id);
-        SharedPreferences prefs = getSharedPreferences("History", MODE_PRIVATE);
-        SharedPreferences.Editor editor = prefs.edit();
+    private void setGsonPref(ArrayList<com.example.myapplication.Color> classes) {
+        SharedPreferences.Editor editor = pref.edit();
         Gson gson = new Gson();
         if (!classes.isEmpty()) {
-            editor.putString(id, gson.toJson(classes));
+            editor.putString("History", gson.toJson(classes));
             Log.v("값 체크", gson.toJson(classes));
         } else {
-            editor.putString(id, null);
+            editor.putString("History", null);
         }
         editor.commit();
     }
@@ -356,18 +336,24 @@ public class Main extends AppCompatActivity {
             }
         }
 
-        yValues.add(new PieEntry(pink, pref_Color.getString("PINK", "자습")));
-        yValues.add(new PieEntry(orange, pref_Color.getString("ORANGE", "수업")));
-        yValues.add(new PieEntry(green, pref_Color.getString("GREEN", "개인업무")));
-        yValues.add(new PieEntry(blue, pref_Color.getString("BLUE", "자기계발")));
-        yValues.add(new PieEntry(purple, pref_Color.getString("PURPLE", "네트워킹")));
+        // 색상 의미 불러오기 / 없을 시 기본 설정
+        yValues.add(new PieEntry(pink, pref.getString("PINK", "자습")));
+        yValues.add(new PieEntry(orange, pref.getString("ORANGE", "수업")));
+        yValues.add(new PieEntry(green, pref.getString("GREEN", "개인업무")));
+        yValues.add(new PieEntry(blue, pref.getString("BLUE", "자기계발")));
+        yValues.add(new PieEntry(purple, pref.getString("PURPLE", "네트워킹")));
 
         // 오른쪽 밑 부분에 넣을 제목 역할
         Description description_pie = new Description();
-        if (pref_Nickname.getString(pref_Logined.getString("ID", ""), "").contentEquals("")) {
+
+        //닉네임 없을 때 안 보이게
+        if (pref.getString("Nickname","").contentEquals("")) {
             description_pie.setText("");
-        } else {
-            description_pie.setText(pref_Nickname.getString(pref_Logined.getString("ID", ""), ""));
+        }
+
+        // 닉네임 설정
+        else {
+            description_pie.setText(pref.getString("Nickname", ""));
         }
         description_pie.setTextSize(15);
         piechart.setDescription(description_pie);
@@ -500,20 +486,20 @@ public class Main extends AppCompatActivity {
 
         // 오른쪽 밑 부분에 넣을 제목 역할
         Description description = new Description();
-        if (pref_Nickname.getString(pref_Logined.getString("ID", ""), "").contentEquals("")) {
+        if (pref.getString("Nickname", "").contentEquals("")) {
             description.setText("");
         } else {
-            description.setText(pref_Nickname.getString(pref_Logined.getString("ID", ""), ""));
+            description.setText(pref.getString("Nickname", ""));
         }
         description.setTextSize(15);
         linechart.setDescription(description);
 
         // 각 Line의 데이터를 저장할 Set
-        LineDataSet set_pink = new LineDataSet(values_pink, pref_Color.getString("PINK", "자습"));
-        LineDataSet set_orange = new LineDataSet(values_orange, pref_Color.getString("ORANGE", "수업"));
-        LineDataSet set_green = new LineDataSet(values_green, pref_Color.getString("GREEN", "개인업무"));
-        LineDataSet set_blue = new LineDataSet(values_blue, pref_Color.getString("BLUE", "자기계발"));
-        LineDataSet set_purple = new LineDataSet(values_purple, pref_Color.getString("PURPLE", "네트워킹"));
+        LineDataSet set_pink = new LineDataSet(values_pink, pref.getString("PINK", "자습"));
+        LineDataSet set_orange = new LineDataSet(values_orange, pref.getString("ORANGE", "수업"));
+        LineDataSet set_green = new LineDataSet(values_green, pref.getString("GREEN", "개인업무"));
+        LineDataSet set_blue = new LineDataSet(values_blue, pref.getString("BLUE", "자기계발"));
+        LineDataSet set_purple = new LineDataSet(values_purple, pref.getString("PURPLE", "네트워킹"));
 
         // 모든 Line들의 데이터를 저장할 dataSets
         ArrayList<ILineDataSet> dataSets = new ArrayList<>();
@@ -580,6 +566,7 @@ public class Main extends AppCompatActivity {
 
     }//End Function
 
+    // view의 이미지를 bitmap으로 반환 / 배경이 검은색
     public Bitmap getBitmapFromView(View view) {
         Bitmap bitmap = Bitmap.createBitmap(view.getWidth(), view.getHeight(), Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(bitmap);
@@ -587,6 +574,7 @@ public class Main extends AppCompatActivity {
         return bitmap;
     }
 
+    // view의 이미지를 bitmap으로 반환 / 배경을 지정할 수 있음
     public Bitmap getBitmapFromView(View view, int defaultColor) {
         Bitmap bitmap = Bitmap.createBitmap(view.getWidth(), view.getHeight(), Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(bitmap);
