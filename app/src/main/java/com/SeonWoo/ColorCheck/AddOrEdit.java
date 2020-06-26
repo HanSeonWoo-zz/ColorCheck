@@ -100,10 +100,20 @@ public class AddOrEdit extends AppCompatActivity {
             public void onClick(View v) {
                 Color cr = new Color(date.getText().toString(), pink.getText().toString(),
                         orange.getText().toString(), green.getText().toString(), blue.getText().toString(), purple.getText().toString());
+
+                // 추가하거나 편집하려는 날짜가 있으면 기존 데이터 삭제
+                for(int i = 0 ; i < mData.size() ; i ++){
+                    if(mData.get(i).getDate().contentEquals(cr.getDate())){
+                        mData.remove(i);
+                        break;
+                    }
+                }
                 if (type.contentEquals("ADD")) {
                     mData.add(0, cr);
+
                 } else if (type.contentEquals("EDIT")) {
                     mData.set(Pos, cr);
+
                 }
 
                 setGsonPref(mData);

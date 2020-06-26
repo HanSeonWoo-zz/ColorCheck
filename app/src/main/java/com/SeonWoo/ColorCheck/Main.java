@@ -93,7 +93,7 @@ public class Main extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        pref = getSharedPreferences("1",MODE_PRIVATE);
+        pref = getSharedPreferences("1", MODE_PRIVATE);
         PickedDate = findViewById(R.id.Main_et_PickedDate);
         PickedDate.setText(pref.getString("PickedDate", "2020년 06월 15일 월"));
 
@@ -108,7 +108,9 @@ public class Main extends AppCompatActivity {
                 myCalendar.set(Calendar.YEAR, year);
                 myCalendar.set(Calendar.MONTH, month);
                 myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-                updateLabel();
+
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy년 MM월 dd일 E", Locale.KOREA);
+                PickedDate.setText(sdf.format(myCalendar.getTime()));
             }
         };
 
@@ -155,8 +157,7 @@ public class Main extends AppCompatActivity {
                 // 현재 보여지는 차트 저장하는 스크린샷
                 if (linechart.getVisibility() == View.VISIBLE) {
                     Request_Capture(linechart, current_time + "_LineChart");
-                }
-                else{
+                } else {
                     Request_Capture(piechart, current_time + "_PieChart");
                 }
                 Toast.makeText(getApplicationContext(), "캡처", Toast.LENGTH_SHORT).show();
@@ -226,6 +227,7 @@ public class Main extends AppCompatActivity {
                 }
 
             }
+
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
             }
@@ -253,7 +255,7 @@ public class Main extends AppCompatActivity {
     }
 
     private ArrayList<com.SeonWoo.ColorCheck.Color> getGsonPref() {
-        String json = pref.getString("History","");
+        String json = pref.getString("History", "");
         Gson gson = new Gson();
 
         ArrayList<com.SeonWoo.ColorCheck.Color> urls = new ArrayList<>();
@@ -284,13 +286,6 @@ public class Main extends AppCompatActivity {
         editor.commit();
     }
 
-    private void updateLabel() {
-        String myFormat = "yyyy년 MM월 dd일 E";    // 출력형식   2018년 12월 25일 금
-        SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.KOREA);
-
-        EditText et_date = findViewById(R.id.Main_et_PickedDate);
-        et_date.setText(sdf.format(myCalendar.getTime()));
-    }
 
     private void SetPieChart() {
 
@@ -347,7 +342,7 @@ public class Main extends AppCompatActivity {
         Description description_pie = new Description();
 
         //닉네임 없을 때 안 보이게
-        if (pref.getString("Nickname","").contentEquals("")) {
+        if (pref.getString("Nickname", "").contentEquals("")) {
             description_pie.setText("");
         }
 

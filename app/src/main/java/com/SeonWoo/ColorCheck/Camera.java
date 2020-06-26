@@ -394,7 +394,7 @@ public class Camera extends AppCompatActivity {
             // createImageFIle()이 잘 작동했을 때 실행.
             if (photoFile != null) {
                 Uri photoURI = FileProvider.getUriForFile(this,
-                        "com.example.myapplication.fileprovider",
+                        "com.SeonWoo.ColorCheck.fileprovider",
                         photoFile);
 
                 // 촬영한 사진을 섬네일 뿐 아닌, 풀사이즈를 받기 위해서

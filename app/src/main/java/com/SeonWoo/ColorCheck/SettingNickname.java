@@ -9,7 +9,7 @@ import android.widget.EditText;
 import androidx.appcompat.app.AppCompatActivity;
 
 public class SettingNickname extends AppCompatActivity {
-    SharedPreferences pref = getSharedPreferences("1",MODE_PRIVATE);
+    SharedPreferences pref;
     Button button;
     EditText et;
 
@@ -17,7 +17,7 @@ public class SettingNickname extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting_nickname);
-
+        pref = getSharedPreferences("1",MODE_PRIVATE);
         button = findViewById(R.id.SettingNickname_bt);
         et = findViewById(R.id.SettingNickname_et);
 

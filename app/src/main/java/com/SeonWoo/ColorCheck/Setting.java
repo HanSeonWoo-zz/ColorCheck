@@ -41,8 +41,11 @@ public class Setting extends AppCompatActivity {
         password = findViewById(R.id.setting_sw_password);
         ask = findViewById(R.id.setting_tv_ask);
         VerInfo = findViewById(R.id.setting_tv_VerInfo);
-        Logout = findViewById(R.id.setting_tv_Logout);
-        Withdrawal = findViewById(R.id.setting_tv_Withdrawal);
+
+        // 로그아웃 / 회원탈퇴 기능을 빼뒀습니다.
+        // 추가 가능성 있음.
+//        Logout = findViewById(R.id.setting_tv_Logout);
+//        Withdrawal = findViewById(R.id.setting_tv_Withdrawal);
         password.setChecked(pref.getBoolean("useSubPassword", false));
         Nickname = findViewById(R.id.setting_tv_Nickname);
 
