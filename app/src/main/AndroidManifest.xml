@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.myapplication">
+    package="com.SeonWoo.ColorCheck">
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
@@ -20,40 +20,40 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <service
-            android:name=".MyService"
+            android:name="com.SeonWoo.ColorCheck.MyService"
             android:enabled="true"
             android:exported="true"></service>
 
-        <activity android:name=".DateInput" />
-        <activity android:name=".AddOrEdit" />
-        <activity android:name=".SettingNickname" />
-        <activity android:name=".History_passwordCheck" />
-        <activity android:name=".Nickname" />
-        <activity android:name=".SettingPasswordCheck" />
-        <activity android:name=".VerInfo" />
-        <activity android:name=".Ask" />
-        <activity android:name=".SettingPassword" />
-        <activity android:name=".Withdrawal" />
-        <activity android:name=".FirstAuthActivity" />
-        <activity android:name=".FindPassword" />
-        <activity android:name=".FindID" />
-        <activity android:name=".Setting" />
-        <activity android:name=".SettingColor" />
-        <activity android:name=".SignUp" />
-        <activity android:name=".Login" />
-        <activity android:name=".History" />
-        <activity android:name=".Main" >
+        <activity android:name="com.SeonWoo.ColorCheck.DateInput" />
+        <activity android:name="com.SeonWoo.ColorCheck.AddOrEdit" />
+        <activity android:name="com.SeonWoo.ColorCheck.SettingNickname" />
+        <activity android:name="com.SeonWoo.ColorCheck.History_passwordCheck" />
+        <activity android:name="com.SeonWoo.ColorCheck.Nickname" />
+        <activity android:name="com.SeonWoo.ColorCheck.SettingPasswordCheck" />
+        <activity android:name="com.SeonWoo.ColorCheck.VerInfo" />
+        <activity android:name="com.SeonWoo.ColorCheck.Ask" />
+        <activity android:name="com.SeonWoo.ColorCheck.SettingPassword" />
+        <activity android:name="com.SeonWoo.ColorCheck.Withdrawal" />
+        <activity android:name="com.SeonWoo.ColorCheck.FirstAuthActivity" />
+        <activity android:name="com.SeonWoo.ColorCheck.FindPassword" />
+        <activity android:name="com.SeonWoo.ColorCheck.FindID" />
+        <activity android:name="com.SeonWoo.ColorCheck.Setting" />
+        <activity android:name="com.SeonWoo.ColorCheck.SettingColor" />
+        <activity android:name="com.SeonWoo.ColorCheck.SignUp" />
+        <activity android:name="com.SeonWoo.ColorCheck.Login" />
+        <activity android:name="com.SeonWoo.ColorCheck.History" />
+        <activity android:name="com.SeonWoo.ColorCheck.Main" >
         <intent-filter>
             <action android:name="android.intent.action.MAIN" />
 
             <category android:name="android.intent.category.LAUNCHER" />
         </intent-filter>
         </activity>
-        <activity android:name=".Camera" />
-        <activity android:name=".Splash"/>
+        <activity android:name="com.SeonWoo.ColorCheck.Camera" />
+        <activity android:name="com.SeonWoo.ColorCheck.Splash"/>
         <provider
             android:name="androidx.core.content.FileProvider"
-            android:authorities="com.example.myapplication.fileprovider"
+            android:authorities="com.SeonWoo.ColorCheck.fileprovider"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data
