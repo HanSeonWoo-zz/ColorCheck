@@ -2,7 +2,8 @@ package com.example.myapplication;
 
 /*
 ///이건 어때
-    ID
+    ID or 기본 Preference
+방문 횟수 : 0인 경우 처음 가이드 줌 닉네임 설정 등등
 useSubPassword - true/false
 subPassword - 1234
 Nickname - 선우

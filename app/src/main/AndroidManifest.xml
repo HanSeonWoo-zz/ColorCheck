@@ -42,16 +42,15 @@
         <activity android:name=".SignUp" />
         <activity android:name=".Login" />
         <activity android:name=".History" />
-        <activity android:name=".Main" />
-        <activity android:name=".Camera" />
-        <activity android:name=".Splash">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+        <activity android:name=".Main" >
+        <intent-filter>
+            <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+            <category android:name="android.intent.category.LAUNCHER" />
+        </intent-filter>
         </activity>
-
+        <activity android:name=".Camera" />
+        <activity android:name=".Splash"/>
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="com.example.myapplication.fileprovider"

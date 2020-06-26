@@ -21,6 +21,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -195,6 +196,7 @@ public class Camera extends AppCompatActivity {
                     mData.addAll(sData);
                     setGsonPref(mData);
                     setResult(RESULT_OK);
+                    Toast.makeText(getApplicationContext(), "저장 완료", Toast.LENGTH_SHORT).show();
                     finish();
 
                 } catch (ParseException e) {

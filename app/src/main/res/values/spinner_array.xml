@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="차트">
-        <item>하루따로차트</item>
-        <item>일주일차트</item>
+        <item>따로보기</item>
+        <item>모아보기</item>
 
 
     </string-array>

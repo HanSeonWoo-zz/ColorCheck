@@ -26,7 +26,6 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.charts.PieChart;
-import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.data.Entry;
@@ -56,7 +55,7 @@ public class Main extends AppCompatActivity {
     public static final int REQUEST_CODE_SETTING = 101;
     public static final int REQUEST_CODE_CAMERA = 102;
     public static final int REQUEST_CODE_HISTORY = 103;
-    SharedPreferences pref_Logined;
+    SharedPreferences pref_Logined = getSharedPreferences("Logined",MODE_PRIVATE);
     String ID;
     SharedPreferences pref_ID;
     SharedPreferences pref_useSubPassword;
@@ -91,14 +90,8 @@ public class Main extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
-//        pref_Logined = getSharedPreferences("Logined", MODE_PRIVATE);
-//        pref_useSubPassword = getSharedPreferences("useSubPassword", MODE_PRIVATE);
-//        pref_Nickname = getSharedPreferences("Nickname", MODE_PRIVATE);
-//        pref_Color = getSharedPreferences("Color" + pref_Logined.getString("ID", ""), MODE_PRIVATE);
-
         SetLineChart();
         SetPieChart();
-
 
     }
 
@@ -120,21 +113,10 @@ public class Main extends AppCompatActivity {
         myDatePicker = new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-//                myCalendar.setFirstDayOfWeek(Calendar.MONDAY);
-//                String ddate = pref_ID.getString("PickedDate","2020년 06월 15일 월");
-//                DateFormat df = new SimpleDateFormat("yyyy년 MM월 dd일 E");
-//                Date date = null;
-//                try {
-//                    date = df.parse(ddate);
-//                } catch (ParseException e) {
-//                    e.printStackTrace();
-//                }
-//                myCalendar.setTime(date);
                 myCalendar.set(Calendar.YEAR, year);
                 myCalendar.set(Calendar.MONTH, month);
                 myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
                 updateLabel();
-
             }
         };
 
@@ -159,15 +141,10 @@ public class Main extends AppCompatActivity {
                     piechart.setVisibility(View.VISIBLE);
                     piechart.setVisibility(View.INVISIBLE);
                 }
-//                Toast.makeText(getApplicationContext(), "Service 끝", Toast.LENGTH_SHORT).show();
-//                Intent intent = new Intent(Main.this, MyService.class);
-//                stopService(intent);
-
             }
 
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                // 입력하기 전에
             }
         });
 
@@ -183,18 +160,10 @@ public class Main extends AppCompatActivity {
                 @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss"); //년,월,일,시간 포멧 설정
                 Date time = new Date(); //파일명 중복 방지를 위해 사용될 현재시간
                 String current_time = sdf.format(time); //String형 변수에 저장
-                Request_Capture(linechartView, current_time + "_capture"); //지정한 Layout 영역 사진첩 저장 요청
-                Request_Capture(piechartView, current_time + "_capture"); //지정한 Layout 영역 사진첩 저장 요청
-                Request_Capture(Layout, current_time + "_capture"); //지정한 Layout 영역 사진첩 저장 요청
+                Request_Capture(linechartView, current_time + "_LineChart"); //지정한 Layout 영역 사진첩 저장 요청
+                Request_Capture(piechartView, current_time + "_PieChart"); //지정한 Layout 영역 사진첩 저장 요청
+                Request_Capture(Layout, current_time + "_Layout"); //지정한 Layout 영역 사진첩 저장 요청
                 Toast.makeText(getApplicationContext(), "캡처", Toast.LENGTH_SHORT).show();
-
-//                Toast.makeText(getApplicationContext(), "Service 시작", Toast.LENGTH_SHORT).show();
-//                Intent intent = new Intent(Main.this, MyService.class);
-//                startService(intent);
-
-
-//                CaptureUtil.captureView(Layout);
-//                CaptureUtil.captureActivity();
             }
         });
 
@@ -251,31 +220,25 @@ public class Main extends AppCompatActivity {
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-//                Log.v("값체크", "position : " + position);
-//                Log.v("값체크", "id : " + id);
-//                Log.v("값체크", "parent.getItemAtPostion : " + parent.getItemAtPosition(position));
 
                 //직선차트
-
                 if (position == 0) {
                     linechart.setVisibility(View.VISIBLE);
                     piechart.setVisibility(View.INVISIBLE);
-
                 }
 
                 //원형차트
                 else if (position == 1) {
                     linechart.setVisibility(View.INVISIBLE);
                     piechart.setVisibility(View.VISIBLE);
+                    // 애니메이션 효과, 펼쳐지는 느낌
                     piechart.animateY(1000, Easing.EaseInOutCubic);
-
                 }
 
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-
             }
         });
 
@@ -289,10 +252,11 @@ public class Main extends AppCompatActivity {
 
         if (requestCode == REQUEST_CODE_CAMERA) {
             if (resultCode == RESULT_OK) {
-                Log.v("위치 체크", "Main_onActivityResult_RESULT_OK");
 
-            } else if (resultCode == RESULT_FIRST_USER) {
-                Log.v("위치 체크", "Main_onActivityResult_RESULT_FIRST_USER");
+            }
+            // Camera.class에서 다시 찍기를 눌렀을 때
+            // 다시 Camera.class로 들어가게 한다.
+            else if (resultCode == RESULT_FIRST_USER) {
                 Intent intent = new Intent(getApplicationContext(), Camera.class);
                 startActivityForResult(intent, REQUEST_CODE_CAMERA);
             }
@@ -354,10 +318,10 @@ public class Main extends AppCompatActivity {
         Collections.sort(mData);
 
         String pickedDate = PickedDate.getText().toString();
-        int Position = -10;
 
+        // 데이터 위치 찾기
+        int Position = -10;
         for (int i = 0; i < mData.size(); i++) {
-            //Log.v("체크_SetPieChart",mData.get(i).getDate()+"|"+pickedDate);
             if (mData.get(i).getDate().contentEquals(pickedDate)) {
                 Position = i;
                 break;
@@ -365,7 +329,6 @@ public class Main extends AppCompatActivity {
         }
 
         // PieChart
-        // piechart.setUsePercentValues(true);
         piechart.getDescription().setEnabled(false);
         piechart.setExtraOffsets(5, 10, 5, 5);
         piechart.setDragDecelerationFrictionCoef(0.95f);
@@ -389,9 +352,7 @@ public class Main extends AppCompatActivity {
                 green += Float.parseFloat(mData.get(Position - i).getGreen());
                 blue += Float.parseFloat(mData.get(Position - i).getBlue());
                 purple += Float.parseFloat(mData.get(Position - i).getPurple());
-                //Log.v("체크_SetPieChart","pink = " + pink);
             } catch (Exception e) {
-                //Log.v("체크_SetPieChart","요일 별로 더하는 중 catch");
             }
         }
 
@@ -420,7 +381,7 @@ public class Main extends AppCompatActivity {
         dataSet.setSliceSpace(3f);
         dataSet.setSelectionShift(5f);
 
-        // 템플릿 순서에 맞게 컬러 설정
+        // 컬러 설정
         dataSet.setColors(PINK, ORANGE, GREEN, BLUE, PURPLE);
 
         PieData piedata = new PieData((dataSet));
@@ -444,19 +405,15 @@ public class Main extends AppCompatActivity {
 
         String pickedDate = PickedDate.getText().toString();
         int Position = -10;
-
         for (int i = 0; i < mData.size(); i++) {
-            //Log.v("값 체크",mData.get(i).getDate()+"|"+pickedDate);
             if (mData.get(i).getDate().contentEquals(pickedDate)) {
                 Position = i;
                 break;
             }
         }
-        // Log.v("값체크","Position : "+Position);
 
         for (int i = 0; i < 7; i++) {
             try {
-                //Log.v("위치 체크","try");
                 values_pink.add(new Entry(i, Float.parseFloat(mData.get(Position - i).getPink())));
                 values_orange.add(new Entry(i, Float.parseFloat(mData.get(Position - i).getOrange())));
                 values_green.add(new Entry(i, Float.parseFloat(mData.get(Position - i).getGreen())));
@@ -464,7 +421,6 @@ public class Main extends AppCompatActivity {
                 values_purple.add(new Entry(i, Float.parseFloat(mData.get(Position - i).getPurple())));
 
             } catch (Exception e) {
-                //Log.v("값체크","catch ");
                 values_pink.add(new Entry(i, 0));
                 values_orange.add(new Entry(i, 0));
                 values_green.add(new Entry(i, 0));
@@ -473,9 +429,7 @@ public class Main extends AppCompatActivity {
             }
         }
 
-        Log.v("값체크", "pickedDate의 14번째 : " + pickedDate.charAt(14));
-
-
+        // 선택한 날의 요일 확인해서 요일 셋팅
         final HashMap<Integer, String> numMap = new HashMap<>();
         if (Character.toString(pickedDate.charAt(14)).contentEquals("월")) {
             numMap.put(0, "월");
@@ -540,13 +494,7 @@ public class Main extends AppCompatActivity {
         xAxis.setValueFormatter(new IndexAxisValueFormatter() {
             @Override
             public String getFormattedValue(float value) {
-                //return super.getFormattedValue(value);
                 return numMap.get((int) value);
-            }
-
-            @Override
-            public String getAxisLabel(float value, AxisBase axis) {
-                return super.getAxisLabel(value, axis);
             }
         });
 
@@ -559,7 +507,6 @@ public class Main extends AppCompatActivity {
         }
         description.setTextSize(15);
         linechart.setDescription(description);
-
 
         // 각 Line의 데이터를 저장할 Set
         LineDataSet set_pink = new LineDataSet(values_pink, pref_Color.getString("PINK", "자습"));
@@ -601,8 +548,7 @@ public class Main extends AppCompatActivity {
         }
 
         /* 캡쳐 파일 저장 */
-//        view.buildDrawingCache(); //캐시 비트 맵 만들기
-//        Bitmap bitmap = view.getDrawingCache();
+        // 배경 : 흰색 / view의 이미지를 저장
         Bitmap bitmap = getBitmapFromView(view, 0xFFFFFFFF);
         FileOutputStream fos;
 
