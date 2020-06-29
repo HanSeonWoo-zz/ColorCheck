@@ -112,11 +112,12 @@ public class History extends AppCompatActivity {
     private ArrayList<Color> getGsonPref() {
         String json = pref.getString("History", null);
         Gson gson = new Gson();
-
+        Log.v("값 체크","getGsonPref_json : " + json);
         ArrayList<Color> urls = new ArrayList<>();
         if (json != null) {
             try {
                 JSONArray a = new JSONArray(json);
+                Log.v("값 체크","getGsonPref_JSONArray");
 
                 for (int i = 0; i < a.length(); i++) {
                     Color url = gson.fromJson(a.optString(i), Color.class);

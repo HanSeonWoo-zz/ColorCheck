@@ -2,13 +2,31 @@ package com.SeonWoo.ColorCheck;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.google.gson.Gson;
+
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.json.JSONArray;
+import org.json.JSONException;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.ArrayList;
 
 public class Setting extends AppCompatActivity {
     SharedPreferences pref;
@@ -20,6 +38,7 @@ public class Setting extends AppCompatActivity {
     public static final int REQUEST_CODE_LOGOUT = 105;
     public static final int REQUEST_CODE_WITHDRAWAL = 106;
     public static final int REQUEST_CODE_NICKNAME = 107;
+    public static final int REQUEST_CODE_TAKEBACKUP = 108;
     TextView setColor;
     Switch password;
     TextView ask;
@@ -27,13 +46,16 @@ public class Setting extends AppCompatActivity {
     TextView Logout;
     TextView Withdrawal;
     TextView Nickname;
+    TextView Backup;
+    TextView TakeBackup;
+    File excel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting);
 
-        pref = getSharedPreferences("1",MODE_PRIVATE);
+        pref = getSharedPreferences("1", MODE_PRIVATE);
         editor = pref.edit();
 
         // 초기화
@@ -41,6 +63,8 @@ public class Setting extends AppCompatActivity {
         password = findViewById(R.id.setting_sw_password);
         ask = findViewById(R.id.setting_tv_ask);
         VerInfo = findViewById(R.id.setting_tv_VerInfo);
+        Backup = findViewById(R.id.setting_tv_backup);
+        TakeBackup = findViewById(R.id.setting_tv_takebackup);
 
         // 로그아웃 / 회원탈퇴 기능을 빼뒀습니다.
         // 추가 가능성 있음.
@@ -48,6 +72,39 @@ public class Setting extends AppCompatActivity {
 //        Withdrawal = findViewById(R.id.setting_tv_Withdrawal);
         password.setChecked(pref.getBoolean("useSubPassword", false));
         Nickname = findViewById(R.id.setting_tv_Nickname);
+
+        // 데이터 내보내기
+        Backup.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Log.v("위치 체크","Setting_Backup_onClick");
+                Gson gson = new Gson();
+                Intent email = new Intent(Intent.ACTION_SEND);
+                email.setType("plain/text");
+                email.putExtra(Intent.EXTRA_SUBJECT, "안녕하세요. Color Check 백업 데이터입니다.");
+                email.putExtra(Intent.EXTRA_TEXT, "안녕하세요. Color Check입니다. 요청하신 백업 데이터를 보내드립니다." +
+                        "\n 다음 내용을 복사하여 '데이터 가져오기'에 붙여 넣으시면 됩니다. " +
+                        "\n\n"+pref.getString("History",""));
+                try {
+                    saveExcel();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                email.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(excel));
+                startActivity(email);
+
+            }
+        });
+
+        // 데이터 가져오기
+        TakeBackup.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), TakeBackup.class);
+                startActivityForResult(intent, REQUEST_CODE_TAKEBACKUP);
+            }
+        });
 
         // 닉네임 변경
         Nickname.setOnClickListener(new View.OnClickListener() {
@@ -178,4 +235,79 @@ public class Setting extends AppCompatActivity {
             }
         }
     }
+
+    private void saveExcel() throws IOException {
+        Workbook workbook = new HSSFWorkbook();
+        Sheet sheet = workbook.createSheet();
+        ArrayList<Color> mItems = getGsonPref();
+
+        Row row = sheet.createRow(0); // 새로운 행 생성
+        Cell cell;
+
+        // 1번 셀 생성과 입력
+        cell = row.createCell(0);
+        cell.setCellValue("DATE");
+
+        // 2번 셀에 값 생성과 입력
+        cell = row.createCell(1);
+        cell.setCellValue("PINK");
+        cell = row.createCell(2);
+        cell.setCellValue("ORANGE");
+        cell = row.createCell(3);
+        cell.setCellValue("GREEN");
+        cell = row.createCell(4);
+        cell.setCellValue("BLUE");
+        cell = row.createCell(5);
+        cell.setCellValue("PURPLE");
+
+        for(int i = 0; i < mItems.size() ; i++){ // 데이터 엑셀에 입력
+            row = sheet.createRow(i+1);
+            cell = row.createCell(0);
+            cell.setCellValue(mItems.get(i).getDate());
+            cell = row.createCell(1);
+            cell.setCellValue(mItems.get(i).getPink());
+            cell = row.createCell(2);
+            cell.setCellValue(mItems.get(i).getOrange());
+            cell = row.createCell(3);
+            cell.setCellValue(mItems.get(i).getGreen());
+            cell = row.createCell(4);
+            cell.setCellValue(mItems.get(i).getBlue());
+            cell = row.createCell(5);
+            cell.setCellValue(mItems.get(i).getPurple());
+        }
+//        excel = File.createTempFile("ColorCheck",".xls", this.getExternalCacheDir());
+//        FileWriter fw = new FileWriter(excel);
+//        FileReader fr = new FileReader(Data.ERR_BAK_FILE);
+        File excelFile = new File(getApplicationContext().getCacheDir(),"ColorCheck.xls");
+        excel = new File(getExternalFilesDir(null),"ColorCheck.xls");
+        try{
+            FileOutputStream os = new FileOutputStream(excelFile);
+            workbook.write(os);
+        }catch (IOException e){
+            e.printStackTrace();
+        }
+        Toast.makeText(getApplicationContext(),excelFile.getAbsolutePath()+"에 저장되었습니다",Toast.LENGTH_SHORT).show();
+    }
+
+    private ArrayList<Color> getGsonPref() {
+        String json = pref.getString("History", null);
+        Gson gson = new Gson();
+        Log.v("값 체크","getGsonPref_json : " + json);
+        ArrayList<Color> urls = new ArrayList<>();
+        if (json != null) {
+            try {
+                JSONArray a = new JSONArray(json);
+                Log.v("값 체크","getGsonPref_JSONArray");
+
+                for (int i = 0; i < a.length(); i++) {
+                    Color url = gson.fromJson(a.optString(i), Color.class);
+                    urls.add(url);
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        return urls;
+    }
+
 }
