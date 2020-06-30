@@ -12,6 +12,10 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.github.mikephil.charting.charts.BarChart;
+import com.github.mikephil.charting.components.XAxis;
+import com.github.mikephil.charting.components.XAxis.XAxisPosition;
+import com.github.mikephil.charting.components.YAxis;
+import com.github.mikephil.charting.components.YAxis.YAxisLabelPosition;
 import com.github.mikephil.charting.data.BarData;
 
 import java.util.ArrayList;
@@ -97,6 +101,35 @@ public class BarChartAdapter extends RecyclerView.Adapter<BarChartAdapter.ViewHo
         holder.barChart.setData(mData.get(position));
         holder.barChart.animateXY(1000,1000);
         holder.barChart.invalidate();
+
+        holder.barChart.getDescription().setEnabled(false);
+
+        XAxis xAxis = holder.barChart.getXAxis();
+        xAxis.setPosition(XAxisPosition.BOTTOM);
+        xAxis.setDrawGridLines(false);
+        xAxis.setLabelCount(7);
+//        xAxis.setValueFormatter(xAxisFormatter);
+
+
+        YAxis leftAxis = holder.barChart.getAxisLeft();
+        leftAxis.setAxisMaximum(8f);
+        leftAxis.setYOffset(2f);
+        leftAxis.setDrawAxisLine(false);
+        leftAxis.setLabelCount(5, true);
+        leftAxis.setPosition(YAxisLabelPosition.OUTSIDE_CHART);
+        leftAxis.setAxisMinimum(0f); // this replaces setStartAtZero(true)
+        leftAxis.enableGridDashedLine(3,3,0);
+
+        YAxis rightAxis = holder.barChart.getAxisRight();
+
+        // 오른쪽 Y축의 숫자를 없앰.
+//        rightAxis.setDrawLabels(false);
+//        // 오른쪽 막는 선을 없앰.
+//        rightAxis.setDrawAxisLine(false);
+//        // 차트의 중간에 그어지는 선을 없앰.
+//        rightAxis.setDrawGridLines(false);
+        rightAxis.setEnabled(false);
+
     }
 
     // getItemCount() - 전체 데이터 갯수 리턴.

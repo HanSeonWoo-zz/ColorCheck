@@ -160,7 +160,7 @@ public class Day extends AppCompatActivity {
             }
         }
 
-        BarDataSet pink = new BarDataSet(entries_pink, "PINK"); // 변수로 받아서 넣어줘도 됨
+        BarDataSet pink = new BarDataSet(entries_pink,""); // 변수로 받아서 넣어줘도 됨
         BarDataSet orange = new BarDataSet(entries_orange, "ORANGE"); // 변수로 받아서 넣어줘도 됨
         BarDataSet green = new BarDataSet(entries_green, "GREEN"); // 변수로 받아서 넣어줘도 됨
         BarDataSet blue = new BarDataSet(entries_blue, "BLUE"); // 변수로 받아서 넣어줘도 됨
@@ -174,22 +174,27 @@ public class Day extends AppCompatActivity {
         purple.setColor(PURPLE);
 
         BarData barData = new BarData();
+        barData.setBarWidth(0.5f);
         barData.addDataSet(pink);
         barDatas.add(barData);
 
         barData = new BarData();
+        barData.setBarWidth(0.5f);
         barData.addDataSet(orange);
         barDatas.add(barData);
 
         barData = new BarData();
+        barData.setBarWidth(0.5f);
         barData.addDataSet(green);
         barDatas.add(barData);
 
         barData = new BarData();
+        barData.setBarWidth(0.5f);
         barData.addDataSet(blue);
         barDatas.add(barData);
 
         barData = new BarData();
+        barData.setBarWidth(0.5f);
         barData.addDataSet(purple);
         barDatas.add(barData);
 
