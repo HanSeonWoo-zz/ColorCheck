@@ -99,9 +99,9 @@
         android:layout_marginRight="8dp"
         android:clickable="true"
         android:ems="8"
-        android:text="2020년 06월 22일 월"
         android:focusable="false"
         android:inputType="date"
+        android:text="2020년 06월 22일 월"
         android:textSize="12dp"
         app:layout_constraintBottom_toTopOf="@+id/LineChart"
         app:layout_constraintEnd_toEndOf="parent" />
@@ -114,5 +114,14 @@
         app:layout_constraintBottom_toBottomOf="@+id/Main_et_PickedDate"
         app:layout_constraintEnd_toStartOf="@+id/Main_et_PickedDate"
         app:layout_constraintTop_toTopOf="@+id/Main_et_PickedDate" />
+
+    <Button
+        android:id="@+id/bt_day"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Day"
+        app:layout_constraintBottom_toTopOf="@+id/Main_bt_camera"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -83,9 +83,9 @@ public class Main extends AppCompatActivity {
     private static final int MY_PERMISSION_STORAGE = 1111;
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        //Destroy 시 유저가 선택한 날짜 저장 -> 다시 실행 시 바로 보여주기.
+    protected void onPause() {
+        super.onPause();
+        //Pause 시 유저가 선택한 날짜 저장 -> 다시 실행 시 바로 보여주기.
         SharedPreferences.Editor editor = pref.edit();
         editor.putString("PickedDate", PickedDate.getText().toString());
         editor.commit();
@@ -112,6 +112,7 @@ public class Main extends AppCompatActivity {
         linechart = findViewById(R.id.LineChart);
         piechart = findViewById(R.id.PieChart);
         piechart.setVisibility(View.INVISIBLE);
+        Button day = findViewById(R.id.bt_day);
 
         // 6.0 마쉬멜로우 이상일 경우에는 권한 체크 후 권한 요청
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -122,6 +123,14 @@ public class Main extends AppCompatActivity {
                 ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
             }
         }
+
+        day.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+               Intent intent = new Intent(getApplicationContext(), Day.class);
+               startActivity(intent);
+            }
+        });
 
         myDatePicker = new DatePickerDialog.OnDateSetListener() {
             @Override
