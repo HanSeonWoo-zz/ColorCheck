@@ -284,7 +284,7 @@ public class Setting extends AppCompatActivity {
             cell = row.createCell(5);
             cell.setCellValue(mItems.get(i).getPurple());
         }
-        String filename="ColorCheck3.xls";
+        String filename="ColorCheck.xls";
 //        String dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS).getAbsolutePath();
         File dir = getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS);
 //        File xls = File.createTempFile("ColorCheck",".xls",dir);
@@ -295,11 +295,11 @@ public class Setting extends AppCompatActivity {
         try{
             // 이 때 파일을 생성한다. 대신 아무 것도 내용이 없어서 0 B
             FileOutputStream os = new FileOutputStream(xls);
-            Log.v("위치 체크","FileOutputStream 이거 되는지");
+            Log.v("위치 체크","FileOutputStream _ Done");
 
-            // 내가 원하는 엑셀 데이터를 입력하는 과정
+            // FileOutputStream으로 생성된 파일에 내가 원하는 엑셀 데이터를 입력하는 과정
             workbook.write(os);
-            Log.v("위치 체크","workbook.write는 되나");
+            Log.v("위치 체크","workbook.write _ Done");
         }
         catch(IOException e){
             Log.v("위치 체크","catch");
@@ -311,6 +311,7 @@ public class Setting extends AppCompatActivity {
 //        Uri uri = FileProvider.getUriForFile(this, BuildConfig.APPLICATION_ID + ".fileprovider",xls);
 //        Uri uri = FileProvider.getUriForFile(this, "com.SeonWoo.ColorCheck.fileprovider",xls);
         Uri uri = FileProvider.getUriForFile(getApplicationContext(), getApplicationContext().getPackageName() + ".fileprovider",xls);
+        Log.v("값 체크","Uri에 들어가는 Authority : " + getApplicationContext().getPackageName() + ".fileprovider");
         it.putExtra(Intent.EXTRA_SUBJECT, "excel file email test");
         //it.putExtra(Intent.EXTRA_STREAM, Uri.parse("file://" + dir + "/" + filename));
         it.putExtra(Intent.EXTRA_STREAM, uri);

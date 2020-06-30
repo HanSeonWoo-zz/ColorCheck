@@ -272,6 +272,14 @@ public class Main extends AppCompatActivity {
                 startActivityForResult(intent, REQUEST_CODE_CAMERA);
             }
         }
+        // History
+        else if (requestCode == REQUEST_CODE_HISTORY) {
+            // History에서 데이터를 삭제한 경우, 갱신을 시키기 위해 나갔다 들어오게 함.
+            if (resultCode == RESULT_FIRST_USER) {
+                Intent intent = new Intent(getApplicationContext(), History.class);
+                startActivityForResult(intent, REQUEST_CODE_HISTORY);
+            }
+        }
 
     }
 
