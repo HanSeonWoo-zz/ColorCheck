@@ -4,14 +4,15 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.util.Log;
 import android.view.View;
 import android.widget.Switch;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.FileProvider;
 
 import com.google.gson.Gson;
 
@@ -49,6 +50,7 @@ public class Setting extends AppCompatActivity {
     TextView Backup;
     TextView TakeBackup;
     File excel;
+    TextView Excel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,6 +67,7 @@ public class Setting extends AppCompatActivity {
         VerInfo = findViewById(R.id.setting_tv_VerInfo);
         Backup = findViewById(R.id.setting_tv_backup);
         TakeBackup = findViewById(R.id.setting_tv_takebackup);
+        Excel = findViewById(R.id.setting_tv_excel);
 
         // 로그아웃 / 회원탈퇴 기능을 빼뒀습니다.
         // 추가 가능성 있음.
@@ -73,25 +76,31 @@ public class Setting extends AppCompatActivity {
         password.setChecked(pref.getBoolean("useSubPassword", false));
         Nickname = findViewById(R.id.setting_tv_Nickname);
 
+        // 엑셀로 내보내기
+        Excel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.v("위치 체크","Setting_Excel");
+                try {
+                    saveExcel();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        });
+
         // 데이터 내보내기
         Backup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 Log.v("위치 체크","Setting_Backup_onClick");
-                Gson gson = new Gson();
                 Intent email = new Intent(Intent.ACTION_SEND);
                 email.setType("plain/text");
                 email.putExtra(Intent.EXTRA_SUBJECT, "안녕하세요. Color Check 백업 데이터입니다.");
                 email.putExtra(Intent.EXTRA_TEXT, "안녕하세요. Color Check입니다. 요청하신 백업 데이터를 보내드립니다." +
                         "\n 다음 내용을 복사하여 '데이터 가져오기'에 붙여 넣으시면 됩니다. " +
                         "\n\n"+pref.getString("History",""));
-                try {
-                    saveExcel();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                email.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(excel));
                 startActivity(email);
 
             }
@@ -275,18 +284,52 @@ public class Setting extends AppCompatActivity {
             cell = row.createCell(5);
             cell.setCellValue(mItems.get(i).getPurple());
         }
+        String filename="ColorCheck3.xls";
+//        String dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS).getAbsolutePath();
+        File dir = getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS);
+//        File xls = File.createTempFile("ColorCheck",".xls",dir);
+        File xls = new File(dir, filename);
+        Log.v("위치 체크",dir.toString());
+        Log.v("위치 체크",xls.toString());
+        //   /storage/emulated/0/Documents
+        try{
+            // 이 때 파일을 생성한다. 대신 아무 것도 내용이 없어서 0 B
+            FileOutputStream os = new FileOutputStream(xls);
+            Log.v("위치 체크","FileOutputStream 이거 되는지");
+
+            // 내가 원하는 엑셀 데이터를 입력하는 과정
+            workbook.write(os);
+            Log.v("위치 체크","workbook.write는 되나");
+        }
+        catch(IOException e){
+            Log.v("위치 체크","catch");
+            e.printStackTrace();
+        }
+
+        Intent it = new Intent(Intent.ACTION_SEND);
+        it.setType("application/excel");
+//        Uri uri = FileProvider.getUriForFile(this, BuildConfig.APPLICATION_ID + ".fileprovider",xls);
+//        Uri uri = FileProvider.getUriForFile(this, "com.SeonWoo.ColorCheck.fileprovider",xls);
+        Uri uri = FileProvider.getUriForFile(getApplicationContext(), getApplicationContext().getPackageName() + ".fileprovider",xls);
+        it.putExtra(Intent.EXTRA_SUBJECT, "excel file email test");
+        //it.putExtra(Intent.EXTRA_STREAM, Uri.parse("file://" + dir + "/" + filename));
+        it.putExtra(Intent.EXTRA_STREAM, uri);
+//        startActivity(it);
+        startActivity(Intent.createChooser(it,"엑셀 공유"));
+
+
 //        excel = File.createTempFile("ColorCheck",".xls", this.getExternalCacheDir());
 //        FileWriter fw = new FileWriter(excel);
 //        FileReader fr = new FileReader(Data.ERR_BAK_FILE);
-        File excelFile = new File(getApplicationContext().getCacheDir(),"ColorCheck.xls");
-        excel = new File(getExternalFilesDir(null),"ColorCheck.xls");
-        try{
-            FileOutputStream os = new FileOutputStream(excelFile);
-            workbook.write(os);
-        }catch (IOException e){
-            e.printStackTrace();
-        }
-        Toast.makeText(getApplicationContext(),excelFile.getAbsolutePath()+"에 저장되었습니다",Toast.LENGTH_SHORT).show();
+//        File excelFile = new File(getApplicationContext().getCacheDir(),"ColorCheck.xls");
+//        excel = new File(getExternalFilesDir(null),"ColorCheck.xls");
+//        try{
+//            FileOutputStream os = new FileOutputStream(excelFile);
+//            workbook.write(os);
+//        }catch (IOException e){
+//            e.printStackTrace();
+//        }
+//        Toast.makeText(getApplicationContext(),excelFile.getAbsolutePath()+"에 저장되었습니다",Toast.LENGTH_SHORT).show();
     }
 
     private ArrayList<Color> getGsonPref() {
