@@ -263,7 +263,8 @@ public class Main extends AppCompatActivity {
 
         if (requestCode == REQUEST_CODE_CAMERA) {
             if (resultCode == RESULT_OK) {
-
+                // 사진 촬영 후 해당 날짜로 PickedDate 설정
+                PickedDate.setText(data.getStringExtra("date"));
             }
             // Camera.class에서 다시 찍기를 눌렀을 때
             // 다시 Camera.class로 들어가게 한다.

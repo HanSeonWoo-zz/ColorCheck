@@ -55,6 +55,8 @@ public class TakeBackup extends AppCompatActivity {
                     } catch (JSONException e) {
                         e.printStackTrace();
                         Log.v("위치 체크","JSONArray 생성 오류");
+                        setResult(RESULT_CANCELED);
+                        finish();
                     }
                 }
 
@@ -62,11 +64,15 @@ public class TakeBackup extends AppCompatActivity {
                     editor.putString("History", gson.toJson(urls));
                 } else {
                     editor.putString("History", null);
+                    setResult(RESULT_CANCELED);
+                    finish();
                 }
                 editor.commit();
 
                 Log.v("값 체크","After take "+gson.toJson(pref.getAll()));
 
+                setResult(RESULT_OK);
+                finish();
             }
         });
     }

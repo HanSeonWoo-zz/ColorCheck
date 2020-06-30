@@ -184,7 +184,9 @@ public class Camera extends AppCompatActivity {
                     // 현재 카메라 촬영 데이터(sData)를 전체 데이터(mData)에 저장.
                     mData.addAll(sData);
                     setGsonPref(mData);
-                    setResult(RESULT_OK);
+                    Intent intent = new Intent();
+                    intent.putExtra("date",DateInput_date);
+                    setResult(RESULT_OK,intent);
                     Toast.makeText(getApplicationContext(), "저장 완료", Toast.LENGTH_SHORT).show();
                     finish();
 

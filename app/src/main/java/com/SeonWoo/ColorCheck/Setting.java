@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -81,12 +82,7 @@ public class Setting extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Log.v("위치 체크","Setting_Excel");
-                try {
                     saveExcel();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
             }
         });
 
@@ -243,9 +239,18 @@ public class Setting extends AppCompatActivity {
                 password.setChecked(false);
             }
         }
+
+        if (requestCode == REQUEST_CODE_TAKEBACKUP) {
+            if (resultCode == RESULT_OK) {
+                Toast.makeText(getApplicationContext(), "가져오기 완료", Toast.LENGTH_SHORT).show();
+            }
+            else if (resultCode == RESULT_CANCELED) {
+                Toast.makeText(getApplicationContext(), "가져오기 실패", Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 
-    private void saveExcel() throws IOException {
+    private void saveExcel() {
         Workbook workbook = new HSSFWorkbook();
         Sheet sheet = workbook.createSheet();
         ArrayList<Color> mItems = getGsonPref();
@@ -285,10 +290,9 @@ public class Setting extends AppCompatActivity {
             cell.setCellValue(mItems.get(i).getPurple());
         }
         String filename="ColorCheck.xls";
-//        String dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS).getAbsolutePath();
         File dir = getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS);
-//        File xls = File.createTempFile("ColorCheck",".xls",dir);
         File xls = new File(dir, filename);
+
         Log.v("위치 체크",dir.toString());
         Log.v("위치 체크",xls.toString());
         //   /storage/emulated/0/Documents
@@ -308,29 +312,13 @@ public class Setting extends AppCompatActivity {
 
         Intent it = new Intent(Intent.ACTION_SEND);
         it.setType("application/excel");
-//        Uri uri = FileProvider.getUriForFile(this, BuildConfig.APPLICATION_ID + ".fileprovider",xls);
-//        Uri uri = FileProvider.getUriForFile(this, "com.SeonWoo.ColorCheck.fileprovider",xls);
         Uri uri = FileProvider.getUriForFile(getApplicationContext(), getApplicationContext().getPackageName() + ".fileprovider",xls);
         Log.v("값 체크","Uri에 들어가는 Authority : " + getApplicationContext().getPackageName() + ".fileprovider");
-        it.putExtra(Intent.EXTRA_SUBJECT, "excel file email test");
-        //it.putExtra(Intent.EXTRA_STREAM, Uri.parse("file://" + dir + "/" + filename));
+        it.putExtra(Intent.EXTRA_SUBJECT, "안녕하세요 Color Check입니다. 요청하신 엑셀 데이터 입니다.");
+        it.putExtra(Intent.EXTRA_TEXT, "안녕하세요 Color Check입니다.\n" +
+                "요청하신 엑셀 데이터자료 입니다. 좋은 하루 보내세요 :) ");
         it.putExtra(Intent.EXTRA_STREAM, uri);
-//        startActivity(it);
         startActivity(Intent.createChooser(it,"엑셀 공유"));
-
-
-//        excel = File.createTempFile("ColorCheck",".xls", this.getExternalCacheDir());
-//        FileWriter fw = new FileWriter(excel);
-//        FileReader fr = new FileReader(Data.ERR_BAK_FILE);
-//        File excelFile = new File(getApplicationContext().getCacheDir(),"ColorCheck.xls");
-//        excel = new File(getExternalFilesDir(null),"ColorCheck.xls");
-//        try{
-//            FileOutputStream os = new FileOutputStream(excelFile);
-//            workbook.write(os);
-//        }catch (IOException e){
-//            e.printStackTrace();
-//        }
-//        Toast.makeText(getApplicationContext(),excelFile.getAbsolutePath()+"에 저장되었습니다",Toast.LENGTH_SHORT).show();
     }
 
     private ArrayList<Color> getGsonPref() {
