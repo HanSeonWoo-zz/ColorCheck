@@ -100,32 +100,18 @@ public class PieChartAdapter extends RecyclerView.Adapter<PieChartAdapter.ViewHo
 
         holder.pieChart.getDescription().setEnabled(false);
 
-        //        // PieChart
-//        piechart.getDescription().setEnabled(false);
-//        piechart.setExtraOffsets(5, 10, 5, 5);
+        holder.pieChart.getDescription().setEnabled(false);
+        //holder.pieChart.setExtraOffsets(5, 10, 5, 5);
 //        piechart.setDragDecelerationFrictionCoef(0.95f);
-//        piechart.setDrawHoleEnabled(false);
+        holder.pieChart.setDrawHoleEnabled(false);
 //        piechart.setHoleColor(android.graphics.Color.WHITE);
-//        piechart.setTransparentCircleRadius(61f);
+        holder.pieChart.setTransparentCircleRadius(61f);
 
-
-//        // 오른쪽 밑 부분에 넣을 제목 역할
-//        Description description_pie = new Description();
-//
-//        //닉네임 없을 때 안 보이게
-//        if (pref.getString("Nickname", "").contentEquals("")) {
-//            description_pie.setText("");
-//        }
-//
-//        // 닉네임 설정
-//        else {
-//            description_pie.setText(pref.getString("Nickname", ""));
-//        }
-//        description_pie.setTextSize(15);
-//        piechart.setDescription(description_pie);
-//
 //        // 처음 그려질 때, 1초에 걸쳐 차르르 하고 펼쳐지는 효과
-//        piechart.animateY(1000, Easing.EaseInOutCubic); //애니메이션
+//        holder.pieChart.animateY(1000, Easing.EaseInOutCubic); //애니메이션
+
+//        holder.pieChart.setDragDecelerationEnabled(false);
+        holder.pieChart.setTouchEnabled(false);
 
     }
 

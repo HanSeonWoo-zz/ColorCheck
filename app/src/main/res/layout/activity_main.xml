@@ -192,8 +192,8 @@
 
     <ImageView
         android:id="@+id/imageView2"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
+        android:layout_width="81dp"
+        android:layout_height="78dp"
         android:layout_marginTop="30dp"
         app:layout_constraintBottom_toTopOf="@+id/main_tv_color"
         app:layout_constraintEnd_toEndOf="parent"

@@ -184,9 +184,8 @@ public class Camera extends AppCompatActivity {
                     // 현재 카메라 촬영 데이터(sData)를 전체 데이터(mData)에 저장.
                     mData.addAll(sData);
                     setGsonPref(mData);
-                    Intent intent = new Intent();
-                    intent.putExtra("date",DateInput_date);
-                    setResult(RESULT_OK,intent);
+                    SharedPreferences.Editor editor = pref.edit();
+                    editor.putString("PickedDate",DateInput_date);
                     Toast.makeText(getApplicationContext(), "저장 완료", Toast.LENGTH_SHORT).show();
                     finish();
 
@@ -843,7 +842,7 @@ public class Camera extends AppCompatActivity {
     }
 
     private ArrayList<com.SeonWoo.ColorCheck.Color> getGsonPref() {
-        String json = pref.getString("History", null);
+        String json = pref.getString("History", "");
         Gson gson = new Gson();
 
         ArrayList<com.SeonWoo.ColorCheck.Color> urls = new ArrayList<>();

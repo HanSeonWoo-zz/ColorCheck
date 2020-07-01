@@ -3,6 +3,8 @@ package com.SeonWoo.ColorCheck;
 import android.app.DatePickerDialog;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.DatePicker;
@@ -20,10 +22,12 @@ import com.google.gson.Gson;
 import org.json.JSONArray;
 import org.json.JSONException;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
+import java.util.Date;
 import java.util.Locale;
 
 public class Static_Day extends AppCompatActivity {
@@ -50,6 +54,7 @@ public class Static_Day extends AppCompatActivity {
         editor.putString("PickedDate", PickedDate.getText().toString());
         editor.commit();
     }
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -63,6 +68,7 @@ public class Static_Day extends AppCompatActivity {
         pAdapter = new PieChartAdapter(this, mPieData, pref.getString("PickedDate", "2020년 06월 15일 월"));
         pieRecycler.setAdapter(pAdapter);
     }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -72,9 +78,9 @@ public class Static_Day extends AppCompatActivity {
         PickedDate.setText(pref.getString("PickedDate", "2020년 06월 15일 월"));
         mPieData = setPieData();
         Gson gson = new Gson();
-        Log.v("값 체크","Day_ mBarData"+mPieData.toString());
-        Log.v("값 체크","Day_ mBarData size "+mPieData.size());
-        Log.v("값 체크","Day_ mBarData 0_YMax "+mPieData.get(0).getYMax());
+        Log.v("값 체크", "Day_ mBarData" + mPieData.toString());
+        Log.v("값 체크", "Day_ mBarData size " + mPieData.size());
+        Log.v("값 체크", "Day_ mBarData 0_YMax " + mPieData.get(0).getYMax());
 
         myDatePicker = new DatePickerDialog.OnDateSetListener() {
             @Override
@@ -93,6 +99,25 @@ public class Static_Day extends AppCompatActivity {
             public void onClick(View v) {
                 new DatePickerDialog(Static_Day.this, myDatePicker, myCalendar.get(Calendar.YEAR),
                         myCalendar.get(Calendar.MONTH), myCalendar.get(Calendar.DAY_OF_MONTH)).show();
+            }
+        });
+
+//         PickedDate 변경 시, 차트 업데이트
+        PickedDate.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+            @Override
+            public void afterTextChanged(Editable arg0) {
+                // 데이터 업데이트
+                mPieData = setPieData();
+                pAdapter = new PieChartAdapter(getApplicationContext(), mPieData, pref.getString("PickedDate", "2020년 06월 15일 월"));
+                pieRecycler.setAdapter(pAdapter);
+
+                // VISIBLE을 껐다가 켜주면 업데이트가 반영됨.
+            }
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
             }
         });
 
@@ -137,64 +162,73 @@ public class Static_Day extends AppCompatActivity {
         ArrayList<PieEntry> entries_week = new ArrayList<>();
         ArrayList<PieEntry> entries_total = new ArrayList<>();
 
-        int Position = -10;
-        for (int i = 0; i < mArrayList.size(); i++) {
-            if (mArrayList.get(i).getDate().contentEquals(pickedDate)) {
-                Position = i;
-                break;
-            }
-        }
-
-
-//        // 데이터 설정
-//
+        // 데이터 설정
         float pink_day = 0;
         float orange_day = 0;
         float green_day = 0;
         float blue_day = 0;
         float purple_day = 0;
-        
+
         float pink_week = 0;
         float orange_week = 0;
         float green_week = 0;
         float blue_week = 0;
         float purple_week = 0;
-        
+
         float pink_total = 0;
         float orange_total = 0;
         float green_total = 0;
         float blue_total = 0;
         float purple_total = 0;
 
-        try {
-            pink_day += Float.parseFloat(mArrayList.get(Position).getPink());
-            orange_day += Float.parseFloat(mArrayList.get(Position).getOrange());
-            green_day += Float.parseFloat(mArrayList.get(Position).getGreen());
-            blue_day += Float.parseFloat(mArrayList.get(Position).getBlue());
-            purple_day += Float.parseFloat(mArrayList.get(Position).getPurple());
-        } catch (Exception e) {
-        }
-        
+        Calendar cal = Calendar.getInstance();
+        // 날짜 형식
+        SimpleDateFormat format = new SimpleDateFormat("yyyy년 MM월 dd일 E", Locale.KOREA);
+
         for (int i = 0; i < 7; i++) {
             try {
-                pink_week += Float.parseFloat(mArrayList.get(Position - i).getPink());
-                orange_week += Float.parseFloat(mArrayList.get(Position - i).getOrange());
-                green_week += Float.parseFloat(mArrayList.get(Position - i).getGreen());
-                blue_week += Float.parseFloat(mArrayList.get(Position - i).getBlue());
-                purple_week += Float.parseFloat(mArrayList.get(Position - i).getPurple());
-            } catch (Exception e) {
+                Date date = format.parse(pickedDate);
+                Log.v("값 체크", "pickedDate : " + pickedDate);
+                cal.setTime(date);
+                cal.add(Calendar.DATE, i);
+                Log.v("값 체크", "캘린더 애드 : " + cal.getTime());
+                Log.v("값 체크", "캘린더 밀리스 : " + cal.getTimeInMillis());
+
+                Log.v("값 체크", "pickedDate+i : " + format.format(cal.getTime()));
+                int Position = -1;
+                for (int j = 0; j < mArrayList.size(); j++) {
+                    if (mArrayList.get(j).getDate().contentEquals(format.format(cal.getTime()))) {
+                        Position = j;
+                        break;
+                    }
+                }
+                if (Position == -1) {
+                } else {
+                    if (i == 0) {
+                        pink_day += Float.parseFloat(mArrayList.get(Position).getPink());
+                        orange_day += Float.parseFloat(mArrayList.get(Position).getOrange());
+                        green_day += Float.parseFloat(mArrayList.get(Position).getGreen());
+                        blue_day += Float.parseFloat(mArrayList.get(Position).getBlue());
+                        purple_day += Float.parseFloat(mArrayList.get(Position).getPurple());
+                    }
+                    pink_week += Float.parseFloat(mArrayList.get(Position).getPink());
+                    orange_week += Float.parseFloat(mArrayList.get(Position).getOrange());
+                    green_week += Float.parseFloat(mArrayList.get(Position).getGreen());
+                    blue_week += Float.parseFloat(mArrayList.get(Position).getBlue());
+                    purple_week += Float.parseFloat(mArrayList.get(Position).getPurple());
+                }
+            } catch (ParseException e) {
+                e.printStackTrace();
+
             }
         }
 
         for (int i = 0; i < mArrayList.size(); i++) {
-            try {
-                pink_total += Float.parseFloat(mArrayList.get(Position - i).getPink());
-                orange_total += Float.parseFloat(mArrayList.get(Position - i).getOrange());
-                green_total += Float.parseFloat(mArrayList.get(Position - i).getGreen());
-                blue_total += Float.parseFloat(mArrayList.get(Position - i).getBlue());
-                purple_total += Float.parseFloat(mArrayList.get(Position - i).getPurple());
-            } catch (Exception e) {
-            }
+            pink_total += Float.parseFloat(mArrayList.get(i).getPink());
+            orange_total += Float.parseFloat(mArrayList.get(i).getOrange());
+            green_total += Float.parseFloat(mArrayList.get(i).getGreen());
+            blue_total += Float.parseFloat(mArrayList.get(i).getBlue());
+            purple_total += Float.parseFloat(mArrayList.get(i).getPurple());
         }
 
         // 색상 의미 불러오기 / 없을 시 기본 설정
@@ -217,9 +251,9 @@ public class Static_Day extends AppCompatActivity {
         entries_total.add(new PieEntry(purple_total, pref.getString("PURPLE", "네트워킹")));
 
 
-                PieDataSet dataSet_day = new PieDataSet(entries_day, "");
-                PieDataSet dataSet_week = new PieDataSet(entries_week, "");
-                PieDataSet dataSet_total = new PieDataSet(entries_total, "");
+        PieDataSet dataSet_day = new PieDataSet(entries_day, "");
+        PieDataSet dataSet_week = new PieDataSet(entries_week, "");
+        PieDataSet dataSet_total = new PieDataSet(entries_total, "");
 
         // 거리두기
         dataSet_day.setSliceSpace(3f);

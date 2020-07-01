@@ -3,6 +3,8 @@ package com.SeonWoo.ColorCheck;
 import android.app.DatePickerDialog;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.DatePicker;
@@ -21,10 +23,12 @@ import com.google.gson.Gson;
 import org.json.JSONArray;
 import org.json.JSONException;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
+import java.util.Date;
 import java.util.Locale;
 
 public class Static_Color extends AppCompatActivity {
@@ -52,6 +56,7 @@ public class Static_Color extends AppCompatActivity {
         editor.putString("PickedDate", PickedDate.getText().toString());
         editor.commit();
     }
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -75,9 +80,9 @@ public class Static_Color extends AppCompatActivity {
         PickedDate.setText(pref.getString("PickedDate", "2020년 06월 15일 월"));
         mBarData = setBarData();
         Gson gson = new Gson();
-        Log.v("값 체크","Day_ mBarData"+mBarData.toString());
-        Log.v("값 체크","Day_ mBarData size "+mBarData.size());
-        Log.v("값 체크","Day_ mBarData 0_YMax "+mBarData.get(0).getYMax());
+        Log.v("값 체크", "Day_ mBarData" + mBarData.toString());
+        Log.v("값 체크", "Day_ mBarData size " + mBarData.size());
+        Log.v("값 체크", "Day_ mBarData 0_YMax " + mBarData.get(0).getYMax());
 
         myDatePicker = new DatePickerDialog.OnDateSetListener() {
             @Override
@@ -96,6 +101,23 @@ public class Static_Color extends AppCompatActivity {
             public void onClick(View v) {
                 new DatePickerDialog(Static_Color.this, myDatePicker, myCalendar.get(Calendar.YEAR),
                         myCalendar.get(Calendar.MONTH), myCalendar.get(Calendar.DAY_OF_MONTH)).show();
+            }
+        });
+
+        //         PickedDate 변경 시, 차트 업데이트
+        PickedDate.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+            @Override
+            public void afterTextChanged(Editable arg0) {
+                // 데이터 업데이트
+                mBarData = setBarData();
+                bAdapter = new BarChartAdapter(getApplicationContext(), mBarData, pref.getString("PickedDate", "2020년 06월 15일 월"));
+                barRecycler.setAdapter(bAdapter);
+            }
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
             }
         });
 
@@ -142,40 +164,48 @@ public class Static_Color extends AppCompatActivity {
         ArrayList<BarEntry> entries_purple = new ArrayList<>();
         String pickedDate = PickedDate.getText().toString();
 
-        int Position = -10;
-        for (int i = 0; i < mArrayList.size(); i++) {
-            if (mArrayList.get(i).getDate().contentEquals(pickedDate)) {
-                Position = i;
-                break;
-            }
-        }
-        Gson gson = new Gson();
-        Log.v("값 체크","mArrayList : " + gson.toJson(mArrayList));
+        Calendar cal = Calendar.getInstance();
+        // 날짜 형식
+        SimpleDateFormat format = new SimpleDateFormat("yyyy년 MM월 dd일 E", Locale.KOREA);
+
         for (int i = 0; i < 7; i++) {
-            try{
-                int x=Position-i;
+            try {
+                Date date = format.parse(pickedDate);
+                Log.v("값 체크","pickedDate : "+pickedDate);
+                cal.setTime(date);
+                cal.add(Calendar.DATE, i);
+                Log.v("값 체크","캘린더 애드 : "+cal.getTime());
+                Log.v("값 체크","캘린더 밀리스 : "+cal.getTimeInMillis());
 
-                Log.v("값 체크","Position : " + Position);
-                Log.v("값 체크","i : " + i);
-                Log.v("값 체크","Position+i : " + (x) + " | mArrayList.get(Position+i).getPink() : " + mArrayList.get(x).getPink() );
-                entries_pink.add(new BarEntry((float)i, Float.parseFloat(mArrayList.get(x).getPink())));
-                entries_orange.add(new BarEntry((float)i, Float.parseFloat(mArrayList.get(x).getOrange())));
-                entries_green.add(new BarEntry((float)i, Float.parseFloat(mArrayList.get(x).getGreen())));
-                entries_blue.add(new BarEntry((float)i, Float.parseFloat(mArrayList.get(x).getBlue())));
-                entries_purple.add(new BarEntry((float)i, Float.parseFloat(mArrayList.get(x).getPurple())));
-            }
-            catch(Exception e){
+                Log.v("값 체크","pickedDate+i : "+format.format(cal.getTime()));
+                int Position = -1;
+                for (int j = 0; j < mArrayList.size(); j++) {
+                    if (mArrayList.get(j).getDate().contentEquals(format.format(cal.getTime()))) {
+                        Position = j;
+                        break;
+                    }
+                }
+                if(Position==-1){
+                    entries_pink.add(new BarEntry(i, 0));
+                    entries_orange.add(new BarEntry(i, 0));
+                    entries_green.add(new BarEntry(i, 0));
+                    entries_blue.add(new BarEntry(i, 0));
+                    entries_purple.add(new BarEntry(i, 0));
+                }
+                else{
+                    entries_pink.add(new BarEntry((float) i, Float.parseFloat(mArrayList.get(Position).getPink())));
+                    entries_orange.add(new BarEntry((float) i, Float.parseFloat(mArrayList.get(Position).getOrange())));
+                    entries_green.add(new BarEntry((float) i, Float.parseFloat(mArrayList.get(Position).getGreen())));
+                    entries_blue.add(new BarEntry((float) i, Float.parseFloat(mArrayList.get(Position).getBlue())));
+                    entries_purple.add(new BarEntry((float) i, Float.parseFloat(mArrayList.get(Position).getPurple())));
+                }
+            } catch (ParseException e) {
                 e.printStackTrace();
-                Log.v("값 체크","catch");
-                entries_pink.add(new BarEntry(i, 0));
-                entries_orange.add(new BarEntry(i, 0));
-                entries_green.add(new BarEntry(i, 0));
-                entries_blue.add(new BarEntry(i, 0));
-                entries_purple.add(new BarEntry(i, 0));
+
             }
         }
 
-        BarDataSet pink = new BarDataSet(entries_pink,"PINK"); // 변수로 받아서 넣어줘도 됨
+        BarDataSet pink = new BarDataSet(entries_pink, "PINK"); // 변수로 받아서 넣어줘도 됨
         BarDataSet orange = new BarDataSet(entries_orange, "ORANGE"); // 변수로 받아서 넣어줘도 됨
         BarDataSet green = new BarDataSet(entries_green, "GREEN"); // 변수로 받아서 넣어줘도 됨
         BarDataSet blue = new BarDataSet(entries_blue, "BLUE"); // 변수로 받아서 넣어줘도 됨
