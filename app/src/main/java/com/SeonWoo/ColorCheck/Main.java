@@ -12,6 +12,7 @@ import android.os.Environment;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -32,30 +33,18 @@ public class Main extends AppCompatActivity {
     public static final int REQUEST_CODE_HISTORY = 103;
     SharedPreferences pref;
 
-//    Spinner spinner;
-//    LineChart linechart;
-//    PieChart piechart;
-
     int PINK = 0XFFFE2E9A;
     int ORANGE = 0XFFFF8000;
     int GREEN = 0XFF1E8037;
     int BLUE = 0XFF0000FF;
     int PURPLE = 0XFFA901DB;
 
-//    EditText PickedDate;
+    TextView userColorTitle;
+    TextView userTimeTitle;
+    TextView userTime;
 
-//    Calendar myCalendar = Calendar.getInstance();
-//    DatePickerDialog.OnDateSetListener myDatePicker;
+    ArrayList<Color> mData;
 
-
-//    @Override
-//    protected void onPause() {
-//        super.onPause();
-//        //Pause 시 유저가 선택한 날짜 저장 -> 다시 실행 시 바로 보여주기.
-//        SharedPreferences.Editor editor = pref.edit();
-//        editor.putString("PickedDate", PickedDate.getText().toString());
-//        editor.commit();
-//    }
 
     @Override
     protected void onResume() {
@@ -63,6 +52,28 @@ public class Main extends AppCompatActivity {
         // 데이터 업데이트
 //        SetLineChart();
 //        SetPieChart();
+
+        // 컬러체크한 총 시간 구하기
+        mData=getGsonPref();
+        double time=0;
+        for(int i = 0 ; i < mData.size() ; i ++){
+            time += Double.parseDouble(mData.get(i).getPink());
+            time += Double.parseDouble(mData.get(i).getOrange());
+            time += Double.parseDouble(mData.get(i).getGreen());
+            time += Double.parseDouble(mData.get(i).getBlue());
+            time += Double.parseDouble(mData.get(i).getPurple());
+        }
+        userTime.setText(time+"시간");
+
+        String nickname = pref.getString("Nickname","");
+        if(nickname.contentEquals("")){
+            nickname="회원";
+        }
+        // 닉네임 + 님의 컬러
+        userColorTitle.setText(nickname+"님의 컬러");
+
+        // 닉네임 + 님의 누적 컬러시간
+        userTimeTitle.setText(nickname+"님의 누적 컬러시간");
     }
 
     @Override
@@ -71,6 +82,10 @@ public class Main extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         pref = getSharedPreferences("1", MODE_PRIVATE);
+        userColorTitle=findViewById(R.id.main_tv_ColorTitle);
+        userTimeTitle=findViewById(R.id.main_tv_TimeTitle);
+        userTime=findViewById(R.id.main_tv_Time);
+
 
 
         // 6.0 마쉬멜로우 이상일 경우에는 권한 체크 후 권한 요청
