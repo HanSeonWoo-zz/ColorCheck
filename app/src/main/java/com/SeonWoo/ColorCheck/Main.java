@@ -15,11 +15,8 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.Settings;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -95,8 +92,8 @@ public class Main extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         // 데이터 업데이트
-        SetLineChart();
-        SetPieChart();
+//        SetLineChart();
+//        SetPieChart();
     }
 
     @Override
@@ -105,14 +102,14 @@ public class Main extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         pref = getSharedPreferences("1", MODE_PRIVATE);
-        PickedDate = findViewById(R.id.Main_et_PickedDate);
-        PickedDate.setText(pref.getString("PickedDate", "2020년 06월 15일 월"));
+//        PickedDate = findViewById(R.id.Main_et_PickedDate);
+//        PickedDate.setText(pref.getString("PickedDate", "2020년 06월 15일 월"));
 
-        spinner = findViewById(R.id.spinner);
-        linechart = findViewById(R.id.LineChart);
-        piechart = findViewById(R.id.PieChart);
-        piechart.setVisibility(View.INVISIBLE);
-        Button day = findViewById(R.id.bt_day);
+//        spinner = findViewById(R.id.spinner);
+//        linechart = findViewById(R.id.LineChart);
+//        piechart = findViewById(R.id.PieChart);
+//        piechart.setVisibility(View.INVISIBLE);
+        Button day = findViewById(R.id.bt_color);
 
         // 6.0 마쉬멜로우 이상일 경우에는 권한 체크 후 권한 요청
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -145,35 +142,35 @@ public class Main extends AppCompatActivity {
         };
 
         // PickedDate 변경 시, 차트 업데이트
-        PickedDate.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-            }
-
-            @Override
-            public void afterTextChanged(Editable arg0) {
-                // 데이터 업데이트
-                SetLineChart();
-                SetPieChart();
-
-                // VISIBLE을 껐다가 켜주면 업데이트가 반영됨.
-                if (linechart.getVisibility() == View.INVISIBLE) {
-                    linechart.setVisibility(View.VISIBLE);
-                    linechart.setVisibility(View.INVISIBLE);
-                    piechart.setVisibility(View.INVISIBLE);
-                    piechart.setVisibility(View.VISIBLE);
-                } else {
-                    linechart.setVisibility(View.INVISIBLE);
-                    linechart.setVisibility(View.VISIBLE);
-                    piechart.setVisibility(View.VISIBLE);
-                    piechart.setVisibility(View.INVISIBLE);
-                }
-            }
-
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
-        });
+//        PickedDate.addTextChangedListener(new TextWatcher() {
+//            @Override
+//            public void onTextChanged(CharSequence s, int start, int before, int count) {
+//            }
+//
+//            @Override
+//            public void afterTextChanged(Editable arg0) {
+//                // 데이터 업데이트
+//                SetLineChart();
+//                SetPieChart();
+//
+//                // VISIBLE을 껐다가 켜주면 업데이트가 반영됨.
+//                if (linechart.getVisibility() == View.INVISIBLE) {
+//                    linechart.setVisibility(View.VISIBLE);
+//                    linechart.setVisibility(View.INVISIBLE);
+//                    piechart.setVisibility(View.INVISIBLE);
+//                    piechart.setVisibility(View.VISIBLE);
+//                } else {
+//                    linechart.setVisibility(View.INVISIBLE);
+//                    linechart.setVisibility(View.VISIBLE);
+//                    piechart.setVisibility(View.VISIBLE);
+//                    piechart.setVisibility(View.INVISIBLE);
+//                }
+//            }
+//
+//            @Override
+//            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+//            }
+//        });
 
         // 스크린샷 버튼
         Button screenshot = findViewById(R.id.Main_screenshot);
@@ -196,13 +193,13 @@ public class Main extends AppCompatActivity {
 
 
         // 날짜 / 데이터 픽커
-        PickedDate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                new DatePickerDialog(Main.this, myDatePicker, myCalendar.get(Calendar.YEAR),
-                        myCalendar.get(Calendar.MONTH), myCalendar.get(Calendar.DAY_OF_MONTH)).show();
-            }
-        });
+//        PickedDate.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                new DatePickerDialog(Main.this, myDatePicker, myCalendar.get(Calendar.YEAR),
+//                        myCalendar.get(Calendar.MONTH), myCalendar.get(Calendar.DAY_OF_MONTH)).show();
+//            }
+//        });
 
         // 세팅 버튼
         Button setting = findViewById(R.id.main_bt_setting);
@@ -238,30 +235,30 @@ public class Main extends AppCompatActivity {
             }
         });
 
-        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-
-                //직선차트
-                if (position == 0) {
-                    linechart.setVisibility(View.VISIBLE);
-                    piechart.setVisibility(View.INVISIBLE);
-                }
-
-                //원형차트
-                else if (position == 1) {
-                    linechart.setVisibility(View.INVISIBLE);
-                    piechart.setVisibility(View.VISIBLE);
-                    // 애니메이션 효과, 펼쳐지는 느낌
-                    piechart.animateY(1000, Easing.EaseInOutCubic);
-                }
-
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-            }
-        });
+//        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+//            @Override
+//            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+//
+//                //직선차트
+//                if (position == 0) {
+//                    linechart.setVisibility(View.VISIBLE);
+//                    piechart.setVisibility(View.INVISIBLE);
+//                }
+//
+//                //원형차트
+//                else if (position == 1) {
+//                    linechart.setVisibility(View.INVISIBLE);
+//                    piechart.setVisibility(View.VISIBLE);
+//                    // 애니메이션 효과, 펼쳐지는 느낌
+//                    piechart.animateY(1000, Easing.EaseInOutCubic);
+//                }
+//
+//            }
+//
+//            @Override
+//            public void onNothingSelected(AdapterView<?> parent) {
+//            }
+//        });
 
     }
 

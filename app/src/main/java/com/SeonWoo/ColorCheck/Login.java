@@ -30,11 +30,6 @@ public class Login extends AppCompatActivity {
     public static final int REQUEST_CODE_FIND_PASSWORD = 103;
     public static final int REQUEST_CODE_SIGN_UP = 104;
 
-    String MyID = "tjsdn@naver.com";
-    String MyPassword = "1234";
-
-    String id = "";
-    String password = "";
     InputMethodManager imm;
     EditText emailInput;
     EditText passwordInput;
