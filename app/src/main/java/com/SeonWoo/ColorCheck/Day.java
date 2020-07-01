@@ -13,7 +13,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.github.mikephil.charting.charts.BarChart;
-import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
@@ -45,7 +44,14 @@ public class Day extends AppCompatActivity {
     int BLUE = 0XFF0000FF;
     int PURPLE = 0XFFA901DB;
 
-
+    @Override
+    protected void onPause() {
+        super.onPause();
+        //Pause 시 유저가 선택한 날짜 저장 -> 다시 실행 시 바로 보여주기.
+        SharedPreferences.Editor editor = pref.edit();
+        editor.putString("PickedDate", PickedDate.getText().toString());
+        editor.commit();
+    }
     @Override
     protected void onResume() {
         super.onResume();
@@ -56,7 +62,7 @@ public class Day extends AppCompatActivity {
         mBarData = setBarData();
 
         barRecycler.setLayoutManager(new LinearLayoutManager(this));
-        bAdapter = new BarChartAdapter(this, mBarData);
+        bAdapter = new BarChartAdapter(this, mBarData, pref.getString("PickedDate", "2020년 06월 15일 월"));
         barRecycler.setAdapter(bAdapter);
     }
 
@@ -102,7 +108,7 @@ public class Day extends AppCompatActivity {
         barRecycler.setLayoutManager(new LinearLayoutManager(this));
 
         // 리사이클러뷰에 CustomAdapter 객체 지정.
-        bAdapter = new BarChartAdapter(this, mBarData);
+        bAdapter = new BarChartAdapter(this, mBarData, pref.getString("PickedDate", "2020년 06월 15일 월"));
         barRecycler.setAdapter(bAdapter);
     }
 
@@ -126,6 +132,7 @@ public class Day extends AppCompatActivity {
 
     private ArrayList<BarData> setBarData() {
         mArrayList = getGsonPref();
+        Collections.sort(mArrayList);
         ArrayList<BarData> barDatas = new ArrayList<>(5);
 
         ArrayList<BarEntry> entries_pink = new ArrayList<>();
@@ -142,16 +149,24 @@ public class Day extends AppCompatActivity {
                 break;
             }
         }
+        Gson gson = new Gson();
+        Log.v("값 체크","mArrayList : " + gson.toJson(mArrayList));
         for (int i = 0; i < 7; i++) {
             try{
-                Log.v("값 체크","Position+i" + (Position+i) + "mArrayList.get(Position+i).getPink() : " + mArrayList.get(Position+i).getPink() );
-                entries_pink.add(new BarEntry((float)i, Float.parseFloat(mArrayList.get(Position+i).getPink())));
-                entries_orange.add(new BarEntry((float)i, Float.parseFloat(mArrayList.get(Position+i).getOrange())));
-                entries_green.add(new BarEntry((float)i, Float.parseFloat(mArrayList.get(Position+i).getGreen())));
-                entries_blue.add(new BarEntry((float)i, Float.parseFloat(mArrayList.get(Position+i).getBlue())));
-                entries_purple.add(new BarEntry((float)i, Float.parseFloat(mArrayList.get(Position+i).getPurple())));
+                int x=Position-i;
+
+                Log.v("값 체크","Position : " + Position);
+                Log.v("값 체크","i : " + i);
+                Log.v("값 체크","Position+i : " + (x) + " | mArrayList.get(Position+i).getPink() : " + mArrayList.get(x).getPink() );
+                entries_pink.add(new BarEntry((float)i, Float.parseFloat(mArrayList.get(x).getPink())));
+                entries_orange.add(new BarEntry((float)i, Float.parseFloat(mArrayList.get(x).getOrange())));
+                entries_green.add(new BarEntry((float)i, Float.parseFloat(mArrayList.get(x).getGreen())));
+                entries_blue.add(new BarEntry((float)i, Float.parseFloat(mArrayList.get(x).getBlue())));
+                entries_purple.add(new BarEntry((float)i, Float.parseFloat(mArrayList.get(x).getPurple())));
             }
             catch(Exception e){
+                e.printStackTrace();
+                Log.v("값 체크","catch");
                 entries_pink.add(new BarEntry(i, 0));
                 entries_orange.add(new BarEntry(i, 0));
                 entries_green.add(new BarEntry(i, 0));
@@ -160,12 +175,11 @@ public class Day extends AppCompatActivity {
             }
         }
 
-        BarDataSet pink = new BarDataSet(entries_pink,""); // 변수로 받아서 넣어줘도 됨
+        BarDataSet pink = new BarDataSet(entries_pink,"PINK"); // 변수로 받아서 넣어줘도 됨
         BarDataSet orange = new BarDataSet(entries_orange, "ORANGE"); // 변수로 받아서 넣어줘도 됨
         BarDataSet green = new BarDataSet(entries_green, "GREEN"); // 변수로 받아서 넣어줘도 됨
         BarDataSet blue = new BarDataSet(entries_blue, "BLUE"); // 변수로 받아서 넣어줘도 됨
         BarDataSet purple = new BarDataSet(entries_purple, "PURPLE"); // 변수로 받아서 넣어줘도 됨
-        pink.setAxisDependency(YAxis.AxisDependency.LEFT);
 
         pink.setColor(PINK);
         orange.setColor(ORANGE);

@@ -17,13 +17,15 @@ import com.github.mikephil.charting.components.XAxis.XAxisPosition;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.components.YAxis.YAxisLabelPosition;
 import com.github.mikephil.charting.data.BarData;
+import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class BarChartAdapter extends RecyclerView.Adapter<BarChartAdapter.ViewHolder> {
-
     private ArrayList<BarData> mData;
     private Context mContext;
+    private String pickedDate;
 
 
     // 아이템 뷰를 저장하는 뷰홀더 클래스.
@@ -75,9 +77,10 @@ public class BarChartAdapter extends RecyclerView.Adapter<BarChartAdapter.ViewHo
     }
 
     // 생성자에서 데이터 리스트 객체를 전달받음.
-    public BarChartAdapter(Context context, ArrayList<BarData> list) {
+    public BarChartAdapter(Context context, ArrayList<BarData> list, String date) {
         mData = list;
         mContext = context;
+        pickedDate = date;
     }
 
     // onCreateViewHolder() - 아이템 뷰를 위한 뷰홀더 객체 생성하여 리턴.
@@ -95,11 +98,10 @@ public class BarChartAdapter extends RecyclerView.Adapter<BarChartAdapter.ViewHo
     // onBindViewHolder() - position에 해당하는 데이터를 뷰홀더의 아이템뷰에 표시.
     @Override
     public void onBindViewHolder(BarChartAdapter.ViewHolder holder, int position) {
-        String[] title = {"PINK", "ORAGNE" ,"GREEN","BLUE","PURPLE"};
-
+        String[] title = {"PINK", "ORAGNE", "GREEN", "BLUE", "PURPLE"};
         holder.title.setText(title[position]);
         holder.barChart.setData(mData.get(position));
-        holder.barChart.animateXY(1000,1000);
+        holder.barChart.animateXY(1000, 1000);
         holder.barChart.invalidate();
 
         holder.barChart.getDescription().setEnabled(false);
@@ -112,23 +114,89 @@ public class BarChartAdapter extends RecyclerView.Adapter<BarChartAdapter.ViewHo
 
 
         YAxis leftAxis = holder.barChart.getAxisLeft();
+        // 최대 최소 지정
         leftAxis.setAxisMaximum(8f);
+        leftAxis.setAxisMinimum(0f);
+
+        // 줄 사이 거리 지정
         leftAxis.setYOffset(2f);
+
         leftAxis.setDrawAxisLine(false);
-        leftAxis.setLabelCount(5, true);
+        leftAxis.setLabelCount(5, false);
         leftAxis.setPosition(YAxisLabelPosition.OUTSIDE_CHART);
-        leftAxis.setAxisMinimum(0f); // this replaces setStartAtZero(true)
-        leftAxis.enableGridDashedLine(3,3,0);
 
-        YAxis rightAxis = holder.barChart.getAxisRight();
+        // 점선으로 대쉬라인을 그음
+        leftAxis.enableGridDashedLine(3, 3, 0);
 
-        // 오른쪽 Y축의 숫자를 없앰.
-//        rightAxis.setDrawLabels(false);
-//        // 오른쪽 막는 선을 없앰.
-//        rightAxis.setDrawAxisLine(false);
-//        // 차트의 중간에 그어지는 선을 없앰.
-//        rightAxis.setDrawGridLines(false);
-        rightAxis.setEnabled(false);
+        // 우측 Y축은 사용하지 않음.
+        holder.barChart.getAxisRight().setEnabled(false);
+
+        // 선택한 날의 요일 확인해서 요일 셋팅
+        final HashMap<Integer, String> numMap = new HashMap<>();
+        if (Character.toString(pickedDate.charAt(14)).contentEquals("월")) {
+            numMap.put(0, "월");
+            numMap.put(1, "화");
+            numMap.put(2, "수");
+            numMap.put(3, "목");
+            numMap.put(4, "금");
+            numMap.put(5, "토");
+            numMap.put(6, "일");
+        } else if (Character.toString(pickedDate.charAt(14)).contentEquals("화")) {
+            numMap.put(6, "월");
+            numMap.put(0, "화");
+            numMap.put(1, "수");
+            numMap.put(2, "목");
+            numMap.put(3, "금");
+            numMap.put(4, "토");
+            numMap.put(5, "일");
+        } else if (Character.toString(pickedDate.charAt(14)).contentEquals("수")) {
+            numMap.put(5, "월");
+            numMap.put(6, "화");
+            numMap.put(0, "수");
+            numMap.put(1, "목");
+            numMap.put(2, "금");
+            numMap.put(3, "토");
+            numMap.put(4, "일");
+        } else if (Character.toString(pickedDate.charAt(14)).contentEquals("목")) {
+            numMap.put(4, "월");
+            numMap.put(5, "화");
+            numMap.put(6, "수");
+            numMap.put(0, "목");
+            numMap.put(1, "금");
+            numMap.put(2, "토");
+            numMap.put(3, "일");
+        } else if (Character.toString(pickedDate.charAt(14)).contentEquals("금")) {
+            numMap.put(3, "월");
+            numMap.put(4, "화");
+            numMap.put(5, "수");
+            numMap.put(6, "목");
+            numMap.put(0, "금");
+            numMap.put(1, "토");
+            numMap.put(2, "일");
+        } else if (Character.toString(pickedDate.charAt(14)).contentEquals("토")) {
+            numMap.put(2, "월");
+            numMap.put(3, "화");
+            numMap.put(4, "수");
+            numMap.put(5, "목");
+            numMap.put(6, "금");
+            numMap.put(0, "토");
+            numMap.put(1, "일");
+        } else if (Character.toString(pickedDate.charAt(14)).contentEquals("일")) {
+            numMap.put(1, "월");
+            numMap.put(2, "화");
+            numMap.put(3, "수");
+            numMap.put(4, "목");
+            numMap.put(5, "금");
+            numMap.put(6, "토");
+            numMap.put(0, "일");
+        }
+
+        xAxis.setValueFormatter(new IndexAxisValueFormatter() {
+            @Override
+            public String getFormattedValue(float value) {
+                return numMap.get((int) value);
+            }
+        });
 
     }
 
