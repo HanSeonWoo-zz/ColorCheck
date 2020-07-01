@@ -188,13 +188,8 @@ public class Static_Day extends AppCompatActivity {
         for (int i = 0; i < 7; i++) {
             try {
                 Date date = format.parse(pickedDate);
-                Log.v("값 체크", "pickedDate : " + pickedDate);
                 cal.setTime(date);
                 cal.add(Calendar.DATE, i);
-                Log.v("값 체크", "캘린더 애드 : " + cal.getTime());
-                Log.v("값 체크", "캘린더 밀리스 : " + cal.getTimeInMillis());
-
-                Log.v("값 체크", "pickedDate+i : " + format.format(cal.getTime()));
                 int Position = -1;
                 for (int j = 0; j < mArrayList.size(); j++) {
                     if (mArrayList.get(j).getDate().contentEquals(format.format(cal.getTime()))) {

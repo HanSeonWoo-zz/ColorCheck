@@ -19,8 +19,13 @@ import com.github.mikephil.charting.components.YAxis.YAxisLabelPosition;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 
 public class BarChartAdapter extends RecyclerView.Adapter<BarChartAdapter.ViewHolder> {
     private ArrayList<BarData> mData;
@@ -131,64 +136,24 @@ public class BarChartAdapter extends RecyclerView.Adapter<BarChartAdapter.ViewHo
         // 우측 Y축은 사용하지 않음.
         holder.barChart.getAxisRight().setEnabled(false);
 
-        // 선택한 날의 요일 확인해서 요일 셋팅
+
         final HashMap<Integer, String> numMap = new HashMap<>();
-        if (Character.toString(pickedDate.charAt(14)).contentEquals("월")) {
-            numMap.put(0, "월");
-            numMap.put(1, "화");
-            numMap.put(2, "수");
-            numMap.put(3, "목");
-            numMap.put(4, "금");
-            numMap.put(5, "토");
-            numMap.put(6, "일");
-        } else if (Character.toString(pickedDate.charAt(14)).contentEquals("화")) {
-            numMap.put(6, "월");
-            numMap.put(0, "화");
-            numMap.put(1, "수");
-            numMap.put(2, "목");
-            numMap.put(3, "금");
-            numMap.put(4, "토");
-            numMap.put(5, "일");
-        } else if (Character.toString(pickedDate.charAt(14)).contentEquals("수")) {
-            numMap.put(5, "월");
-            numMap.put(6, "화");
-            numMap.put(0, "수");
-            numMap.put(1, "목");
-            numMap.put(2, "금");
-            numMap.put(3, "토");
-            numMap.put(4, "일");
-        } else if (Character.toString(pickedDate.charAt(14)).contentEquals("목")) {
-            numMap.put(4, "월");
-            numMap.put(5, "화");
-            numMap.put(6, "수");
-            numMap.put(0, "목");
-            numMap.put(1, "금");
-            numMap.put(2, "토");
-            numMap.put(3, "일");
-        } else if (Character.toString(pickedDate.charAt(14)).contentEquals("금")) {
-            numMap.put(3, "월");
-            numMap.put(4, "화");
-            numMap.put(5, "수");
-            numMap.put(6, "목");
-            numMap.put(0, "금");
-            numMap.put(1, "토");
-            numMap.put(2, "일");
-        } else if (Character.toString(pickedDate.charAt(14)).contentEquals("토")) {
-            numMap.put(2, "월");
-            numMap.put(3, "화");
-            numMap.put(4, "수");
-            numMap.put(5, "목");
-            numMap.put(6, "금");
-            numMap.put(0, "토");
-            numMap.put(1, "일");
-        } else if (Character.toString(pickedDate.charAt(14)).contentEquals("일")) {
-            numMap.put(1, "월");
-            numMap.put(2, "화");
-            numMap.put(3, "수");
-            numMap.put(4, "목");
-            numMap.put(5, "금");
-            numMap.put(6, "토");
-            numMap.put(0, "일");
+        Calendar cal = Calendar.getInstance();
+        // 날짜 형식
+        SimpleDateFormat format = new SimpleDateFormat("yyyy년 MM월 dd일 E", Locale.KOREA);
+        Date date = null;
+        try {
+            date = format.parse(pickedDate);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        for(int i = 0 ; i < 7 ; i ++){
+            cal.setTime(date);
+            cal.add(Calendar.DATE, i);
+            // 2020년 06월 25일 월 // 이라는 String에서
+            // <월 \n 06.25> 인 데이터를 HashMap에 넣음.
+            String CurrentDay = format.format(cal.getTime());
+            numMap.put(i, CurrentDay.charAt(14)+"\n"+CurrentDay.charAt(6)+CurrentDay.charAt(7)+"."+CurrentDay.charAt(10)+CurrentDay.charAt(11));
         }
 
         xAxis.setValueFormatter(new IndexAxisValueFormatter() {
@@ -197,6 +162,8 @@ public class BarChartAdapter extends RecyclerView.Adapter<BarChartAdapter.ViewHo
                 return numMap.get((int) value);
             }
         });
+
+        holder.barChart.setXAxisRenderer(new CustomXAxisRenderer(holder.barChart.getViewPortHandler(), holder.barChart.getXAxis(), holder.barChart.getTransformer(YAxis.AxisDependency.LEFT)));
 
     }
 
