@@ -16,9 +16,9 @@
         android:roundIcon="@drawable/notebook"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".CustomColor"></activity>
-        <activity android:name=".BarChartActivity" />
-        <activity android:name=".Day" />
+        <activity android:name=".Static_Day"></activity>
+        <activity android:name=".CustomColor" />
+        <activity android:name=".Static_Color" />
         <activity android:name=".TakeBackup" />
         <activity android:name=".DateInput" />
         <activity android:name=".AddOrEdit" />

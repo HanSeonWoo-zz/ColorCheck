@@ -27,7 +27,7 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Locale;
 
-public class Day extends AppCompatActivity {
+public class Static_Color extends AppCompatActivity {
     SharedPreferences pref;
     RecyclerView barRecycler;
     ArrayList<BarChart> mBarChart;
@@ -69,9 +69,9 @@ public class Day extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_day);
+        setContentView(R.layout.activity_static_color);
         pref = getSharedPreferences("1", MODE_PRIVATE);
-        PickedDate = findViewById(R.id.day_et_PickedDate);
+        PickedDate = findViewById(R.id.color_et_PickedDate);
         PickedDate.setText(pref.getString("PickedDate", "2020년 06월 15일 월"));
         mBarData = setBarData();
         Gson gson = new Gson();
@@ -94,7 +94,7 @@ public class Day extends AppCompatActivity {
         PickedDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new DatePickerDialog(Day.this, myDatePicker, myCalendar.get(Calendar.YEAR),
+                new DatePickerDialog(Static_Color.this, myDatePicker, myCalendar.get(Calendar.YEAR),
                         myCalendar.get(Calendar.MONTH), myCalendar.get(Calendar.DAY_OF_MONTH)).show();
             }
         });

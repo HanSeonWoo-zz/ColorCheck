@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Day">
+    tools:context=".Static_Color">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler2"
@@ -22,17 +22,17 @@
         android:layout_marginStart="36dp"
         android:layout_marginTop="36dp"
         android:gravity="center"
-        android:text="통계"
-        android:textSize="30dp"
+        android:text="컬러별 통계"
+        android:textSize="25dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
-        android:id="@+id/day_et_PickedDate"
+        android:id="@+id/color_et_PickedDate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:clickable="true"
-        android:ems="10"
+        android:ems="8"
         android:focusable="false"
         android:gravity="center"
         android:inputType="date"
