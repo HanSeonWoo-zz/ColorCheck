@@ -46,6 +46,12 @@ public class Static_Day extends AppCompatActivity {
     int BLUE = 0XFF0000FF;
     int PURPLE = 0XFFA901DB;
 
+    int PINK_Custom;
+    int ORANGE_Custom;
+    int GREEN_Custom;
+    int BLUE_Custom;
+    int PURPLE_Custom;
+
     @Override
     protected void onPause() {
         super.onPause();
@@ -65,15 +71,23 @@ public class Static_Day extends AppCompatActivity {
         mPieData = setPieData();
 
         pieRecycler.setLayoutManager(new LinearLayoutManager(this));
-        pAdapter = new PieChartAdapter(this, mPieData, pref.getString("PickedDate", "2020년 06월 15일 월"));
+        pAdapter = new PieChartAdapter(this, mPieData, pref.getString("PickedDate", "2020년 06월 15일 월"), mArrayList.size());
         pieRecycler.setAdapter(pAdapter);
+
+        PINK_Custom = pref.getInt("RGB_PINK",PINK);
+        ORANGE_Custom = pref.getInt("RGB_ORANGE",ORANGE);
+        GREEN_Custom = pref.getInt("RGB_GREEN",GREEN);
+        BLUE_Custom = pref.getInt("RGB_BLUE",BLUE);
+        PURPLE_Custom = pref.getInt("RGB_PURPLE",PURPLE);
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_static_day);
+
         pref = getSharedPreferences("1", MODE_PRIVATE);
+        mArrayList = getGsonPref();
         PickedDate = findViewById(R.id.day_et_PickedDate);
         PickedDate.setText(pref.getString("PickedDate", "2020년 06월 15일 월"));
         mPieData = setPieData();
@@ -111,7 +125,7 @@ public class Static_Day extends AppCompatActivity {
             public void afterTextChanged(Editable arg0) {
                 // 데이터 업데이트
                 mPieData = setPieData();
-                pAdapter = new PieChartAdapter(getApplicationContext(), mPieData, pref.getString("PickedDate", "2020년 06월 15일 월"));
+                pAdapter = new PieChartAdapter(getApplicationContext(), mPieData, pref.getString("PickedDate", "2020년 06월 15일 월"), mArrayList.size());
                 pieRecycler.setAdapter(pAdapter);
 
                 // VISIBLE을 껐다가 켜주면 업데이트가 반영됨.
@@ -130,7 +144,7 @@ public class Static_Day extends AppCompatActivity {
         pieRecycler.setLayoutManager(new LinearLayoutManager(this));
 
         // 리사이클러뷰에 CustomAdapter 객체 지정.
-        pAdapter = new PieChartAdapter(this, mPieData, pref.getString("PickedDate", "2020년 06월 15일 월"));
+        pAdapter = new PieChartAdapter(this, mPieData, PickedDate.getText().toString(), mArrayList.size());
         pieRecycler.setAdapter(pAdapter);
     }
 

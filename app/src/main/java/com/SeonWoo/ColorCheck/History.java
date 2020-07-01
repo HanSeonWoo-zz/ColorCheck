@@ -36,6 +36,21 @@ public class History extends AppCompatActivity {
     Button buttonInsert;
     Button delete;
 
+    int PINK = 0XFFFE2E9A;
+    int ORANGE = 0XFFFF8000;
+    int GREEN = 0XFF1E8037;
+    int BLUE = 0XFF0000FF;
+    int PURPLE = 0XFFA901DB;
+
+    int[] Colorlist;
+
+    Button box_pink;
+    Button box_orange;
+    Button box_green;
+    Button box_blue;
+    Button box_purple;
+
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -44,7 +59,7 @@ public class History extends AppCompatActivity {
         Collections.sort(mArrayList);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        mAdapter = new CustomAdapter(this, mArrayList);
+        mAdapter = new CustomAdapter(this, mArrayList, Colorlist);
         recyclerView.setAdapter(mAdapter);
     }
 
@@ -71,11 +86,31 @@ public class History extends AppCompatActivity {
         blue = findViewById(R.id.main_tv4);
         purple = findViewById(R.id.main_tv5);
 
+        box_pink = findViewById(R.id.box_pink);
+        box_orange = findViewById(R.id.box_orange);
+        box_green = findViewById(R.id.box_green);
+        box_blue = findViewById(R.id.box_blue);
+        box_purple = findViewById(R.id.box_purple);
+
         pink.setText(pref.getString("PINK", "자습"));
         orange.setText(pref.getString("ORANGE", "수업"));
         green.setText(pref.getString("GREEN", "개인업무"));
         blue.setText(pref.getString("BLUE", "자기계발"));
         purple.setText(pref.getString("PURPLE", "네트워킹"));
+
+        Colorlist = new int[5];
+
+        Colorlist[0] = pref.getInt("RGB_PINK",PINK);
+        Colorlist[1] = pref.getInt("RGB_ORANGE",ORANGE);
+        Colorlist[2] = pref.getInt("RGB_GREEN",GREEN);
+        Colorlist[3] = pref.getInt("RGB_BLUE", BLUE);
+        Colorlist[4] = pref.getInt("RGB_PURPLE",PURPLE);
+
+        box_pink.setBackgroundColor(pref.getInt("RGB_PINK",PINK));
+        box_orange.setBackgroundColor(pref.getInt("RGB_ORANGE",ORANGE));
+        box_green.setBackgroundColor(pref.getInt("RGB_GREEN",GREEN));
+        box_blue.setBackgroundColor(pref.getInt("RGB_BLUE",BLUE));
+        box_purple.setBackgroundColor(pref.getInt("RGB_PURPLE",PURPLE));
 
         // 추가 버튼
         buttonInsert.setOnClickListener(new View.OnClickListener() {
@@ -132,7 +167,7 @@ public class History extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         // 리사이클러뷰에 CustomAdapter 객체 지정.
-        mAdapter = new CustomAdapter(this, mArrayList);
+        mAdapter = new CustomAdapter(this, mArrayList, Colorlist);
         recyclerView.setAdapter(mAdapter);
 
     }

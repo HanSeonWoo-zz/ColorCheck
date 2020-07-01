@@ -33,7 +33,6 @@
         android:layout_height="29dp"
         android:layout_marginTop="116dp"
         android:background="@color/colorpink"
-        android:text=""
         app:layout_constraintStart_toEndOf="@+id/divider4"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -43,7 +42,6 @@
         android:layout_height="29dp"
         android:layout_marginTop="20dp"
         android:background="@color/colororange"
-        android:text=""
         app:layout_constraintStart_toEndOf="@+id/divider4"
         app:layout_constraintTop_toBottomOf="@+id/pink" />
 
@@ -53,7 +51,6 @@
         android:layout_height="29dp"
         android:layout_marginTop="20dp"
         android:background="@color/colorgreen"
-        android:text=""
         app:layout_constraintStart_toEndOf="@+id/divider4"
         app:layout_constraintTop_toBottomOf="@+id/orange" />
 
@@ -63,7 +60,6 @@
         android:layout_height="29dp"
         android:layout_marginTop="20dp"
         android:background="@color/colorblue"
-        android:text=""
         app:layout_constraintStart_toEndOf="@+id/divider4"
         app:layout_constraintTop_toBottomOf="@+id/green" />
 
@@ -73,7 +69,6 @@
         android:layout_height="29dp"
         android:layout_marginTop="20dp"
         android:background="@color/colorpurple"
-        android:text=""
         app:layout_constraintStart_toEndOf="@+id/divider4"
         app:layout_constraintTop_toBottomOf="@+id/blue" />
 
@@ -161,6 +156,7 @@
         android:textColor="#FFFFFF"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.711"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.573" />
@@ -184,6 +180,30 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/ColorReset"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="컬러 리셋"
+        app:layout_constraintBottom_toBottomOf="@+id/color_bt_correct"
+        app:layout_constraintEnd_toStartOf="@+id/color_bt_correct"
+        app:layout_constraintHorizontal_bias="0.682"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/color_bt_correct"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <TextView
+        android:id="@+id/textView13"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="색상 버튼 클릭 시, 컬러 설정가능합니다."
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.473"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ColorReset"
+        app:layout_constraintVertical_bias="0.138" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

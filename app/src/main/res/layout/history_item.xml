@@ -27,7 +27,7 @@
             android:orientation="vertical">
 
             <Button
-                android:id="@+id/box_pink"
+                android:id="@+id/item_box_pink"
                 android:layout_width="20dp"
                 android:layout_height="20dp"
                 android:background="@color/colorpink" />
@@ -48,7 +48,7 @@
             android:orientation="vertical">
 
             <Button
-                android:id="@+id/box_orange"
+                android:id="@+id/item_box_orange"
                 android:layout_width="20dp"
                 android:layout_height="20dp"
                 android:background="@color/colororange" />
@@ -69,7 +69,7 @@
             android:orientation="vertical">
 
             <Button
-                android:id="@+id/box_green"
+                android:id="@+id/item_box_green"
                 android:layout_width="20dp"
                 android:layout_height="20dp"
                 android:background="@color/colorgreen" />
@@ -90,7 +90,7 @@
             android:orientation="vertical">
 
             <Button
-                android:id="@+id/box_blue"
+                android:id="@+id/item_box_blue"
                 android:layout_width="20dp"
                 android:layout_height="20dp"
                 android:background="@color/colorblue" />
@@ -111,7 +111,7 @@
             android:orientation="vertical">
 
             <Button
-                android:id="@+id/box_purple"
+                android:id="@+id/item_box_purple"
                 android:layout_width="20dp"
                 android:layout_height="20dp"
                 android:background="@color/colorpurple" />

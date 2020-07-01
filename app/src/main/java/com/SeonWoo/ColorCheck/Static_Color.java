@@ -113,7 +113,7 @@ public class Static_Color extends AppCompatActivity {
             public void afterTextChanged(Editable arg0) {
                 // 데이터 업데이트
                 mBarData = setBarData();
-                bAdapter = new BarChartAdapter(getApplicationContext(), mBarData, pref.getString("PickedDate", "2020년 06월 15일 월"));
+                bAdapter = new BarChartAdapter(getApplicationContext(), mBarData, PickedDate.getText().toString());
                 barRecycler.setAdapter(bAdapter);
             }
             @Override
@@ -205,17 +205,17 @@ public class Static_Color extends AppCompatActivity {
             }
         }
 
-        BarDataSet pink = new BarDataSet(entries_pink, "PINK"); // 변수로 받아서 넣어줘도 됨
-        BarDataSet orange = new BarDataSet(entries_orange, "ORANGE"); // 변수로 받아서 넣어줘도 됨
-        BarDataSet green = new BarDataSet(entries_green, "GREEN"); // 변수로 받아서 넣어줘도 됨
-        BarDataSet blue = new BarDataSet(entries_blue, "BLUE"); // 변수로 받아서 넣어줘도 됨
-        BarDataSet purple = new BarDataSet(entries_purple, "PURPLE"); // 변수로 받아서 넣어줘도 됨
+        BarDataSet pink = new BarDataSet(entries_pink, ""); // 변수로 받아서 넣어줘도 됨
+        BarDataSet orange = new BarDataSet(entries_orange, ""); // 변수로 받아서 넣어줘도 됨
+        BarDataSet green = new BarDataSet(entries_green, ""); // 변수로 받아서 넣어줘도 됨
+        BarDataSet blue = new BarDataSet(entries_blue, ""); // 변수로 받아서 넣어줘도 됨
+        BarDataSet purple = new BarDataSet(entries_purple, ""); // 변수로 받아서 넣어줘도 됨
 
-        pink.setColor(PINK);
-        orange.setColor(ORANGE);
-        green.setColor(GREEN);
-        blue.setColor(BLUE);
-        purple.setColor(PURPLE);
+        pink.setColor(pref.getInt("RGB_PINK",PINK));
+        orange.setColor(pref.getInt("RGB_ORANGE",ORANGE));
+        green.setColor(pref.getInt("RGB_GREEN",GREEN));
+        blue.setColor(pref.getInt("RGB_BLUE",BLUE));
+        purple.setColor(pref.getInt("RGB_PURPLE",PURPLE));
 
         BarData barData = new BarData();
         barData.setBarWidth(0.5f);

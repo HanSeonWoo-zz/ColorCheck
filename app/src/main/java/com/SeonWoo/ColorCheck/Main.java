@@ -45,13 +45,23 @@ public class Main extends AppCompatActivity {
 
     ArrayList<Color> mData;
 
+    Button pink;
+    Button orange;
+    Button blue;
+    Button green;
+    Button purple;
+
 
     @Override
     protected void onResume() {
         super.onResume();
-        // 데이터 업데이트
-//        SetLineChart();
-//        SetPieChart();
+        // 컬러 현황 업데이트
+        pink.setBackgroundColor(pref.getInt("RGB_PINK",PINK));
+        orange.setBackgroundColor(pref.getInt("RGB_ORANGE",ORANGE));
+        green.setBackgroundColor(pref.getInt("RGB_GREEN",GREEN));
+        blue.setBackgroundColor(pref.getInt("RGB_BLUE",BLUE));
+        purple.setBackgroundColor(pref.getInt("RGB_PURPLE",PURPLE));
+
 
         // 컬러체크한 총 시간 구하기
         mData=getGsonPref();
@@ -85,6 +95,12 @@ public class Main extends AppCompatActivity {
         userColorTitle=findViewById(R.id.main_tv_ColorTitle);
         userTimeTitle=findViewById(R.id.main_tv_TimeTitle);
         userTime=findViewById(R.id.main_tv_Time);
+
+        pink = findViewById(R.id.main_pink);
+        orange = findViewById(R.id.main_orange);
+        green = findViewById(R.id.main_green);
+        blue = findViewById(R.id.main_blue);
+        purple = findViewById(R.id.main_purple);
 
 
 

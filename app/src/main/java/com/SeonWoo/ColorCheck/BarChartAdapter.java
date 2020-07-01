@@ -162,7 +162,7 @@ public class BarChartAdapter extends RecyclerView.Adapter<BarChartAdapter.ViewHo
                 return numMap.get((int) value);
             }
         });
-
+        holder.barChart.getLegend().setFormSize(1);
         holder.barChart.setXAxisRenderer(new CustomXAxisRenderer(holder.barChart.getViewPortHandler(), holder.barChart.getXAxis(), holder.barChart.getTransformer(YAxis.AxisDependency.LEFT)));
 
     }

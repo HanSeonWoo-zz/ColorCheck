@@ -14,13 +14,18 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.data.PieData;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
 
 public class PieChartAdapter extends RecyclerView.Adapter<PieChartAdapter.ViewHolder> {
     private ArrayList<PieData> mData;
     private Context mContext;
     private String pickedDate;
-
+    private int mSize;
 
     // 아이템 뷰를 저장하는 뷰홀더 클래스.
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnCreateContextMenuListener {
@@ -29,7 +34,9 @@ public class PieChartAdapter extends RecyclerView.Adapter<PieChartAdapter.ViewHo
         // OnCreateContextMenuListener 리스너를 구현해야 합니다.
 
         protected TextView title;
+        protected TextView sub;
         protected PieChart pieChart;
+
 
 
         ViewHolder(View itemView) {
@@ -37,6 +44,7 @@ public class PieChartAdapter extends RecyclerView.Adapter<PieChartAdapter.ViewHo
 
             // 뷰 객체에 대한 참조. (hold strong reference)
             title = itemView.findViewById(R.id.piechart_tv_title);
+            sub = itemView.findViewById(R.id.piechart_tv_sub);
             pieChart = itemView.findViewById(R.id.piechart);
 
             itemView.setOnCreateContextMenuListener(this);
@@ -71,10 +79,11 @@ public class PieChartAdapter extends RecyclerView.Adapter<PieChartAdapter.ViewHo
     }
 
     // 생성자에서 데이터 리스트 객체를 전달받음.
-    public PieChartAdapter(Context context, ArrayList<PieData> list, String date) {
+    public PieChartAdapter(Context context, ArrayList<PieData> list, String date, int size) {
         mData = list;
         mContext = context;
         pickedDate = date;
+        mSize = size;
     }
 
     // onCreateViewHolder() - 아이템 뷰를 위한 뷰홀더 객체 생성하여 리턴.
@@ -93,25 +102,45 @@ public class PieChartAdapter extends RecyclerView.Adapter<PieChartAdapter.ViewHo
     @Override
     public void onBindViewHolder(PieChartAdapter.ViewHolder holder, int position) {
         String[] title = {"일일 통계", "주간 통계", "전체 통계"};
+        String before;
+        String after;
+
+        Calendar cal = Calendar.getInstance();
+        SimpleDateFormat format = new SimpleDateFormat("yyyy년 MM월 dd일 E", Locale.KOREA);
+        SimpleDateFormat format2 = new SimpleDateFormat("MM. dd. E", Locale.KOREA);
+
+        Date date = null;
+        try {
+            date = format.parse(pickedDate);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        cal.setTime(date);
+        before = format2.format(cal.getTime());
+        cal.add(Calendar.DATE, 7);
+        after = format2.format(cal.getTime());
+
+        String[] sub = {before , before + " ~ " + after, "총 "+mSize+"개의 데이터"};
+
         holder.title.setText(title[position]);
+        holder.sub.setText(sub[position]);
         holder.pieChart.setData(mData.get(position));
         holder.pieChart.animateXY(1000, 1000);
         holder.pieChart.invalidate();
 
         holder.pieChart.getDescription().setEnabled(false);
+        holder.pieChart.setTouchEnabled(false);
+        holder.pieChart.getLegend().setEnabled(false);
+//        holder.pieChart.setDrawHoleEnabled(false);
 
-        holder.pieChart.getDescription().setEnabled(false);
-        //holder.pieChart.setExtraOffsets(5, 10, 5, 5);
-//        piechart.setDragDecelerationFrictionCoef(0.95f);
-        holder.pieChart.setDrawHoleEnabled(false);
+//        holder.pieChart.setExtraOffsets(5, 10, 5, 5);
+//        holder.pieChart.setDragDecelerationFrictionCoef(0.95f);
+//
 //        piechart.setHoleColor(android.graphics.Color.WHITE);
-        holder.pieChart.setTransparentCircleRadius(61f);
-
-//        // 처음 그려질 때, 1초에 걸쳐 차르르 하고 펼쳐지는 효과
-//        holder.pieChart.animateY(1000, Easing.EaseInOutCubic); //애니메이션
+//        holder.pieChart.setTransparentCircleRadius(61f);
 
 //        holder.pieChart.setDragDecelerationEnabled(false);
-        holder.pieChart.setTouchEnabled(false);
+
 
     }
 

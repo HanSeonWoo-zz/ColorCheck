@@ -52,17 +52,18 @@ public class Camera extends AppCompatActivity {
 
     String mCurrentPhotoPath;
 
-    // 이미지 클릭 시 근처 영역에 같은 색을 찾는데
-    // 그 때의 가로 세로
-    final static int WIDTH = 50;
-    final static int HEIGHT = 50;
-
     // 컬러 Hue 값 설정 // HSV
-    final static double PINK = 335;
-    final static double ORANGE = 23;
-    final static double GREEN = 113;
-    final static double BLUE = 199;
-    final static double PURPLE = 269;
+    static double PINK;
+    static double ORANGE;
+    static double GREEN;
+    static double BLUE;
+    static double PURPLE;
+
+    final static double PINK_origin = 335;
+    final static double ORANGE_origin = 23;
+    final static double GREEN_origin = 113;
+    final static double BLUE_origin = 199;
+    final static double PURPLE_origin = 269;
     // 컬러 Saturation 값
     double SATURATION = 0.3;
     // 컬러 Value 값
@@ -92,6 +93,12 @@ public class Camera extends AppCompatActivity {
     ArrayList<com.SeonWoo.ColorCheck.Color> sData;
 
     ProgressBar Bar;
+    int rgb_pink=0XFFFE2E9A;
+    int rgb_orange=0XFFFF8000;
+    int rgb_green=0XFF1E8037;
+    int rgb_blue=0XFF0000FF;
+    int rgb_purple=0XFFA901DB;
+
 
 
     @SuppressLint("HandlerLeak")
@@ -130,6 +137,59 @@ public class Camera extends AppCompatActivity {
         setContentView(R.layout.activity_camera);
         Log.v("위치체크", "OnCreate");
         pref = getSharedPreferences("1", MODE_PRIVATE);
+
+        // 커스텀 색상이 존재하면 RGB ->HSV로 바꿔서 색상인식에 적용하기
+        if(pref.getInt("RGB_PINK",0)==0){
+            PINK = PINK_origin;
+        }
+        else{
+            rgb_pink = pref.getInt("RGB_PINK",0XFFFE2E9A);
+            Log.v("값체크","RGB_PINK값은? " + rgb_pink);
+            float[] b = new float[3];
+            Color.RGBToHSV((rgb_pink >> 16) & 0xFF, (rgb_pink >> 8) & 0xFF, (rgb_pink) & 0xFF, b);
+            PINK = b[0];
+        }
+        if(pref.getInt("RGB_ORANGE",0)==0){
+            ORANGE = ORANGE_origin;
+        }
+        else{
+            rgb_orange = pref.getInt("RGB_ORANGE",0XFFFF8000);
+            float[] b = new float[3];
+            Color.RGBToHSV((rgb_orange >> 16) & 0xFF, (rgb_orange >> 8) & 0xFF, (rgb_orange) & 0xFF, b);
+            ORANGE = b[0];
+        }
+
+        if(pref.getInt("RGB_GREEN",0)==0){
+            GREEN = GREEN_origin;
+        }
+        else{
+            rgb_green = pref.getInt("RGB_GREEN",0XFF1E8037);
+            float[] b = new float[3];
+            Color.RGBToHSV((rgb_green >> 16) & 0xFF, (rgb_green >> 8) & 0xFF, (rgb_green) & 0xFF, b);
+            GREEN = b[0];
+        }
+
+        if(pref.getInt("RGB_BLUE",0)==0){
+            BLUE = BLUE_origin;
+        }
+        else{
+            rgb_blue = pref.getInt("RGB_BLUE",0XFF0000FF);
+            float[] b = new float[3];
+            Color.RGBToHSV((rgb_blue >> 16) & 0xFF, (rgb_blue >> 8) & 0xFF, (rgb_blue) & 0xFF, b);
+            BLUE = b[0];
+        }
+
+        if(pref.getInt("RGB_PURPLE",0)==0){
+            PURPLE = PURPLE_origin;
+        }
+        else{
+            rgb_purple = pref.getInt("RGB_PURPLE",0XFFA901DB);
+            float[] b = new float[3];
+            Color.RGBToHSV((rgb_purple >> 16) & 0xFF, (rgb_purple >> 8) & 0xFF, (rgb_purple) & 0xFF, b);
+            PURPLE = b[0];
+        }
+        
+        
 
         // 매칭 / save : 저장 버튼 / Bar : 프로그레스바 / re : 다시찍기 버튼 / imageView : 카메라 촬영한 이미지
         save = findViewById(R.id.Camera_save);
@@ -498,19 +558,24 @@ public class Camera extends AppCompatActivity {
                     // 찾는 Color영역의 색을 동일하게 설정한다.
                     if (bool_pink[i][j] || bool_orange[i][j] || bool_green[i][j] || bool_blue[i][j] || bool_purple[i][j]) {
                         if (bool_pink[i][j]) {
-                            coloredBitmap.setPixel(i, j, 0xFFFF3399);
+//                            coloredBitmap.setPixel(i, j, 0xFFFF3399);
+                            coloredBitmap.setPixel(i, j, rgb_pink);
                         }
                         if (bool_orange[i][j]) {
-                            coloredBitmap.setPixel(i, j, 0xFFFFA500);
+//                            coloredBitmap.setPixel(i, j, 0xFFFFA500);
+                            coloredBitmap.setPixel(i, j, rgb_orange);
                         }
                         if (bool_green[i][j]) {
-                            coloredBitmap.setPixel(i, j, 0xFF008000);
+//                            coloredBitmap.setPixel(i, j, 0xFF008000);
+                            coloredBitmap.setPixel(i, j, rgb_green);
                         }
                         if (bool_blue[i][j]) {
-                            coloredBitmap.setPixel(i, j, 0xFF0000FF);
+//                            coloredBitmap.setPixel(i, j, 0xFF0000FF);
+                            coloredBitmap.setPixel(i, j, rgb_blue);
                         }
                         if (bool_purple[i][j]) {
-                            coloredBitmap.setPixel(i, j, 0xFF800080);
+//                            coloredBitmap.setPixel(i, j, 0xFF800080);
+                            coloredBitmap.setPixel(i, j, rgb_purple);
                         }
                     }
 //                    else {

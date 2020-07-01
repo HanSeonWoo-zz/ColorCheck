@@ -8,6 +8,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
@@ -18,6 +19,7 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
 
     private ArrayList<Color> mData;
     private Context mContext;
+    private int[] Colorlist;
 
     // 아이템 뷰를 저장하는 뷰홀더 클래스.
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnCreateContextMenuListener {
@@ -32,6 +34,12 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
         protected TextView blue;
         protected TextView purple;
 
+        protected Button box_pink;
+        protected Button box_orange;
+        protected Button box_green;
+        protected Button box_blue;
+        protected Button box_purple;
+
 
         ViewHolder(View itemView) {
             super(itemView);
@@ -43,6 +51,12 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
             green = itemView.findViewById(R.id.tv_green);
             blue = itemView.findViewById(R.id.tv_blue);
             purple = itemView.findViewById(R.id.tv_purple);
+
+            box_pink = itemView.findViewById(R.id.item_box_pink);
+            box_orange = itemView.findViewById(R.id.item_box_orange);
+            box_green = itemView.findViewById(R.id.item_box_green);
+            box_blue = itemView.findViewById(R.id.item_box_blue);
+            box_purple = itemView.findViewById(R.id.item_box_purple);
 
             itemView.setOnCreateContextMenuListener(this);
             //2. OnCreateContextMenuListener 리스너를 현재 클래스에서 구현한다고 설정해둡니다.
@@ -97,9 +111,10 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
     }
 
     // 생성자에서 데이터 리스트 객체를 전달받음.
-    public CustomAdapter(Context context, ArrayList<Color> list) {
+    public CustomAdapter(Context context, ArrayList<Color> list, int[] colorlist) {
         mData = list;
         mContext = context;
+        Colorlist = colorlist;
     }
 
     // onCreateViewHolder() - 아이템 뷰를 위한 뷰홀더 객체 생성하여 리턴.
@@ -123,6 +138,12 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
         holder.green.setText(mData.get(position).getGreen());
         holder.blue.setText(mData.get(position).getBlue());
         holder.purple.setText(mData.get(position).getPurple());
+
+        holder.box_pink.setBackgroundColor(Colorlist[0]);
+        holder.box_orange.setBackgroundColor(Colorlist[1]);
+        holder.box_green.setBackgroundColor(Colorlist[2]);
+        holder.box_blue.setBackgroundColor(Colorlist[3]);
+        holder.box_purple.setBackgroundColor(Colorlist[4]);
     }
 
     // getItemCount() - 전체 데이터 갯수 리턴.
