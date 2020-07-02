@@ -71,7 +71,7 @@ public class Static_Day extends AppCompatActivity {
         mPieData = setPieData();
 
         pieRecycler.setLayoutManager(new LinearLayoutManager(this));
-        pAdapter = new PieChartAdapter(this, mPieData, pref.getString("PickedDate", "2020년 06월 15일 월"), mArrayList.size());
+        pAdapter = new PieChartAdapter(this, mPieData, PickedDate.getText().toString(), mArrayList.size());
         pieRecycler.setAdapter(pAdapter);
 
         PINK_Custom = pref.getInt("RGB_PINK",PINK);
@@ -125,7 +125,7 @@ public class Static_Day extends AppCompatActivity {
             public void afterTextChanged(Editable arg0) {
                 // 데이터 업데이트
                 mPieData = setPieData();
-                pAdapter = new PieChartAdapter(getApplicationContext(), mPieData, pref.getString("PickedDate", "2020년 06월 15일 월"), mArrayList.size());
+                pAdapter = new PieChartAdapter(getApplicationContext(), mPieData, PickedDate.getText().toString(), mArrayList.size());
                 pieRecycler.setAdapter(pAdapter);
 
                 // VISIBLE을 껐다가 켜주면 업데이트가 반영됨.

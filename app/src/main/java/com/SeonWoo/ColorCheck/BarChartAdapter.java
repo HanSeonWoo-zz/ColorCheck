@@ -120,7 +120,7 @@ public class BarChartAdapter extends RecyclerView.Adapter<BarChartAdapter.ViewHo
 
         YAxis leftAxis = holder.barChart.getAxisLeft();
         // 최대 최소 지정
-        leftAxis.setAxisMaximum(8f);
+        leftAxis.setAxisMaximum(9f);
         leftAxis.setAxisMinimum(0f);
 
         // 줄 사이 거리 지정

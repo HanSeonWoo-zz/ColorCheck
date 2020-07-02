@@ -197,7 +197,9 @@
         android:id="@+id/textView13"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="색상 버튼 클릭 시, 컬러 설정가능합니다."
+        android:text="             형광펜 색상 지정방법\n\n 1. 바꾸고 싶은 색상의 버튼을 누른다.\n
+2. 형광펜을 칠한 사진을 찍는다. \n 3. 사진에서 형광펜 위치를 클릭한다.\n
+4. '변경'버튼을 누른다."
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.473"

@@ -246,6 +246,7 @@ public class Camera extends AppCompatActivity {
                     setGsonPref(mData);
                     SharedPreferences.Editor editor = pref.edit();
                     editor.putString("PickedDate",DateInput_date);
+                    editor.commit();
                     Toast.makeText(getApplicationContext(), "저장 완료", Toast.LENGTH_SHORT).show();
                     finish();
 

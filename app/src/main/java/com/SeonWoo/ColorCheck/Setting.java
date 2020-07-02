@@ -28,7 +28,10 @@ import org.json.JSONException;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Locale;
 
 public class Setting extends AppCompatActivity {
     SharedPreferences pref;
@@ -41,6 +44,7 @@ public class Setting extends AppCompatActivity {
     public static final int REQUEST_CODE_WITHDRAWAL = 106;
     public static final int REQUEST_CODE_NICKNAME = 107;
     public static final int REQUEST_CODE_TAKEBACKUP = 108;
+    public static final int REQUEST_CODE_EXCEL = 109;
     TextView setColor;
     Switch password;
     TextView ask;
@@ -82,7 +86,11 @@ public class Setting extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Log.v("위치 체크","Setting_Excel");
+                try {
                     saveExcel();
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
             }
         });
 
@@ -248,9 +256,13 @@ public class Setting extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), "가져오기 실패", Toast.LENGTH_SHORT).show();
             }
         }
+
+        if (requestCode == REQUEST_CODE_EXCEL) {
+//                Toast.makeText(getApplicationContext(), "이메일이 발송됐습니다.", Toast.LENGTH_SHORT).show();
+        }
     }
 
-    private void saveExcel() {
+    private void saveExcel() throws ParseException {
         Workbook workbook = new HSSFWorkbook();
         Sheet sheet = workbook.createSheet();
         ArrayList<Color> mItems = getGsonPref();
@@ -277,7 +289,11 @@ public class Setting extends AppCompatActivity {
         for(int i = 0; i < mItems.size() ; i++){ // 데이터 엑셀에 입력
             row = sheet.createRow(i+1);
             cell = row.createCell(0);
-            cell.setCellValue(mItems.get(i).getDate());
+            SimpleDateFormat format = new SimpleDateFormat("yyyy년 MM월 dd일 E", Locale.KOREA);
+            SimpleDateFormat format2 = new SimpleDateFormat("yyyy-MM-dd", Locale.KOREA);
+
+//            cell.setCellValue(mItems.get(i).getDate());
+            cell.setCellValue(format2.format(format.parse(mItems.get(i).getDate())));
             cell = row.createCell(1);
             cell.setCellValue(mItems.get(i).getPink());
             cell = row.createCell(2);
@@ -318,7 +334,8 @@ public class Setting extends AppCompatActivity {
         it.putExtra(Intent.EXTRA_TEXT, "안녕하세요 Color Check입니다.\n" +
                 "요청하신 엑셀 데이터자료 입니다. 좋은 하루 보내세요 :) ");
         it.putExtra(Intent.EXTRA_STREAM, uri);
-        startActivity(Intent.createChooser(it,"엑셀 공유"));
+        startActivityForResult(Intent.createChooser(it,"엑셀 공유"),REQUEST_CODE_EXCEL);
+
     }
 
     private ArrayList<Color> getGsonPref() {

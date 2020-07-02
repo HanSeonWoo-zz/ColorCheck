@@ -98,7 +98,7 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
             public boolean onMenuItemClick(MenuItem item) {
 
                 switch (item.getItemId()) {
-                    case 1002:
+                    case 1001:
                         mData.remove(getAdapterPosition());
                         notifyItemRemoved(getAdapterPosition());
                         notifyItemRangeChanged(getAdapterPosition(), mData.size());
